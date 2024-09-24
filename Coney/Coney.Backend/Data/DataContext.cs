@@ -17,4 +17,6 @@ public class DataContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Country>().HasIndex(x => x.Name).IsUnique();
     }
+
+    public DbSet<Rule> Rules { get; set; }
 }

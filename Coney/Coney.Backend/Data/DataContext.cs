@@ -12,11 +12,14 @@ public class DataContext : DbContext
 
     public DbSet<Country> Countries { get; set; }
 
+    public DbSet<Rule> Rules { get; set; }
+    public DbSet<Prize> Prices { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Country>().HasIndex(x => x.Name).IsUnique();
-    }
 
-    public DbSet<Rule> Rules { get; set; }
+        modelBuilder.Entity<Prize>().Property(p => p.Value).ValueGeneratedNever();
+    }
 }

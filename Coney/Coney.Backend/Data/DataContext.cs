@@ -14,6 +14,7 @@ public class DataContext : DbContext
 
     public DbSet<Rule> Rules { get; set; }
     public DbSet<Prize> Prices { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

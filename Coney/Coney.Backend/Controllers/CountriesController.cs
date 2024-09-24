@@ -20,7 +20,8 @@ public class CountriesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAsync()
     {
-        return Ok(await _context.Countries.ToListAsync());
+        var successResponse = new ApiResponse<List<Country>>(true, 200, await _context.Countries.ToListAsync());
+        return Ok(successResponse);
     }
 
     [HttpGet("{id}")]
@@ -29,9 +30,11 @@ public class CountriesController : ControllerBase
         var country = await _context.Countries.FindAsync(id);
         if (country == null)
         {
-            return NotFound();
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
         }
-        return Ok(country);
+        var successResponse = new ApiResponse<Country>(true, 200, country);
+        return Ok(successResponse);
     }
 
     [HttpPost]
@@ -48,12 +51,14 @@ public class CountriesController : ControllerBase
         var currentCountry = await _context.Countries.FindAsync(country.Id);
         if (currentCountry == null)
         {
-            return NotFound();
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
         }
         currentCountry.Name = country.Name;
         _context.Update(currentCountry);
         await _context.SaveChangesAsync();
-        return NoContent();
+        var successResponse = new ApiResponse<List<Country>>(true, 200, []);
+        return Ok(successResponse);
     }
 
     [HttpDelete("{id}")]
@@ -62,10 +67,12 @@ public class CountriesController : ControllerBase
         var country = await _context.Countries.FindAsync(id);
         if (country == null)
         {
-            return NotFound();
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
         }
         _context.Remove(country);
         await _context.SaveChangesAsync();
-        return NoContent();
+        var successResponse = new ApiResponse<List<Country>>(true, 200, []);
+        return Ok(successResponse);
     }
 }

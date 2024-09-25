@@ -17,59 +17,67 @@ public class PricesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostAsync(Prize price)
+    public async Task<IActionResult> PostAsync(Prize prize)
     {
-        _context.Add(price);
+        _context.Add(prize);
         await _context.SaveChangesAsync();
-        return Ok(price);
+        var successResponse = new ApiResponse<Prize>(true, 200, prize);
+        return Ok(successResponse);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAsync()
     {
-        return Ok(await _context.Prices.ToListAsync());
+        var successResponse = new ApiResponse<List<Prize>>(true, 200, await _context.Prices.ToListAsync());
+        return Ok(successResponse);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAsync(int id)
     {
-        var rule = await _context.Prices.FindAsync(id);
-        if (rule == null)
+        var prize = await _context.Prices.FindAsync(id);
+        if (prize == null)
         {
-            return NotFound();
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
         }
-        return Ok(rule);
+        var successResponse = new ApiResponse<Prize>(true, 200, prize);
+        return Ok(successResponse);
     }
 
     [HttpPut]
-    public async Task<IActionResult> PutAsync(Prize price)
+    public async Task<IActionResult> PutAsync(Prize prize)
     {
-        var currentPrize = await _context.Prices.FindAsync(price.Id);
+        var currentPrize = await _context.Prices.FindAsync(prize.Id);
         if (currentPrize == null)
         {
-            return NotFound();
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
         }
-        currentPrize.Name = price.Name;
-        currentPrize.Description = price.Description;
-        currentPrize.Value = price.Value;
-        currentPrize.DeliveredDate = price.DeliveredDate;
-        currentPrize.Delivered = price.Delivered;
+        currentPrize.Name = prize.Name;
+        currentPrize.Description = prize.Description;
+        currentPrize.Value = prize.Value;
+        currentPrize.DeliveredDate = prize.DeliveredDate;
+        currentPrize.Delivered = prize.Delivered;
 
         _context.Update(currentPrize);
         await _context.SaveChangesAsync();
-        return NoContent();
+        var successResponse = new ApiResponse<Prize>(true, 200, currentPrize);
+        return Ok(successResponse);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        var price = await _context.Prices.FindAsync(id);
-        if (price == null)
+        var prize = await _context.Prices.FindAsync(id);
+        if (prize == null)
         {
-            return NotFound();
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
         }
-        _context.Remove(price);
+        _context.Remove(prize);
         await _context.SaveChangesAsync();
-        return NoContent();
+        var successResponse = new ApiResponse<List<Prize>>(true, 200, []);
+        return Ok(successResponse);
     }
 }

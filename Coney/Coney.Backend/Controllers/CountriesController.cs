@@ -17,6 +17,15 @@ public class CountriesController : ControllerBase
         _context = context;
     }
 
+    [HttpPost]
+    public async Task<IActionResult> PostAsync(Country country)
+    {
+        _context.Add(country);
+        await _context.SaveChangesAsync();
+        var successResponse = new ApiResponse<Country>(true, 200, country);
+        return Ok(successResponse);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAsync()
     {
@@ -35,14 +44,6 @@ public class CountriesController : ControllerBase
         }
         var successResponse = new ApiResponse<Country>(true, 200, country);
         return Ok(successResponse);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> PostAsync(Country country)
-    {
-        _context.Add(country);
-        await _context.SaveChangesAsync();
-        return Ok(country);
     }
 
     [HttpPut]

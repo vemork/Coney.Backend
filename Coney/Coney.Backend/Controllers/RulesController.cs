@@ -16,10 +16,20 @@ public class RulesController : ControllerBase
         _context = context;
     }
 
+    [HttpPost]
+    public async Task<IActionResult> PostAsync(Rule rule)
+    {
+        _context.Add(rule);
+        await _context.SaveChangesAsync();
+        var successResponse = new ApiResponse<Rule>(true, 200, rule);
+        return Ok(successResponse);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAsync()
     {
-        return Ok(await _context.Rules.ToListAsync());
+        var successResponse = new ApiResponse<List<Rule>>(true, 200, await _context.Rules.ToListAsync());
+        return Ok(successResponse);
     }
 
     [HttpGet("{id}")]
@@ -28,30 +38,11 @@ public class RulesController : ControllerBase
         var rule = await _context.Rules.FindAsync(id);
         if (rule == null)
         {
-            return NotFound();
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
         }
-        return Ok(rule);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> PostAsync(Rule rule)
-    {
-        _context.Add(rule);
-        await _context.SaveChangesAsync();
-        return Ok(rule);
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync(int id)
-    {
-        var rule = await _context.Rules.FindAsync(id);
-        if (rule == null)
-        {
-            return NotFound();
-        }
-        _context.Remove(rule);
-        await _context.SaveChangesAsync();
-        return NoContent();
+        var successResponse = new ApiResponse<Rule>(true, 200, rule);
+        return Ok(successResponse);
     }
 
     [HttpPut]
@@ -60,7 +51,8 @@ public class RulesController : ControllerBase
         var currentRule = await _context.Rules.FindAsync(rule.Id);
         if (currentRule == null)
         {
-            return NotFound();
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
         }
         currentRule.Description = rule.Description;
         currentRule.InitDate = rule.InitDate;
@@ -69,6 +61,22 @@ public class RulesController : ControllerBase
 
         _context.Update(currentRule);
         await _context.SaveChangesAsync();
-        return NoContent();
+        var successResponse = new ApiResponse<Rule>(true, 200, currentRule);
+        return Ok(successResponse);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        var rule = await _context.Rules.FindAsync(id);
+        if (rule == null)
+        {
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
+        }
+        _context.Remove(rule);
+        await _context.SaveChangesAsync();
+        var successResponse = new ApiResponse<List<Rule>>(true, 200, []);
+        return Ok(successResponse);
     }
 }

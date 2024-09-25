@@ -11,6 +11,7 @@ public class DataContext : DbContext
     }
 
     public DbSet<Country> Countries { get; set; }
+    public DbSet<State> States { get; set; }
 
     public DbSet<Rule> Rules { get; set; }
     public DbSet<Prize> Prices { get; set; }
@@ -21,7 +22,18 @@ public class DataContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Country>().HasIndex(x => x.Name).IsUnique();
-
+        modelBuilder.Entity<State>().HasIndex(x => new { x.CountryId, x.Name }).IsUnique();
         modelBuilder.Entity<Prize>().Property(p => p.Value).ValueGeneratedNever();
+
+        DisableCascadingDelete(modelBuilder);
+    }
+
+    private void DisableCascadingDelete(ModelBuilder modelBuilder)
+    {
+        var relationships = modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys());
+        foreach (var relationship in relationships)
+        {
+            relationship.DeleteBehavior = DeleteBehavior.Restrict;
+        }
     }
 }

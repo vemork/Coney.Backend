@@ -2,7 +2,7 @@
 
 namespace Coney.Shared.Entities;
 
-public class Country
+public class State
 {
     public int Id { get; set; }
 
@@ -10,7 +10,6 @@ public class Country
     [Required]
     public string Name { get; set; } = null!;
 
-    public ICollection<State>? States { get; set; }
-
-    public int StatesCount => States == null ? 0 : States.Count;
+    public Country Country { get; set; } = null!;
+    public string CountryId { get; set; } = null!;
 }

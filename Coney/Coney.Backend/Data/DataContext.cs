@@ -12,6 +12,7 @@ public class DataContext : DbContext
 
     public DbSet<Country> Countries { get; set; }
     public DbSet<State> States { get; set; }
+    public DbSet<City> Cities { get; set; }
 
     public DbSet<Rule> Rules { get; set; }
     public DbSet<Prize> Prices { get; set; }
@@ -23,6 +24,7 @@ public class DataContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Country>().HasIndex(x => x.Name).IsUnique();
         modelBuilder.Entity<State>().HasIndex(x => new { x.CountryId, x.Name }).IsUnique();
+        modelBuilder.Entity<City>().HasIndex(c => new { c.StateId, c.Name }).IsUnique();
         modelBuilder.Entity<Prize>().Property(p => p.Value).ValueGeneratedNever();
 
         DisableCascadingDelete(modelBuilder);

@@ -2,7 +2,7 @@
 
 namespace Coney.Shared.Entities;
 
-public class State
+public class City
 {
     public int Id { get; set; }
 
@@ -10,8 +10,8 @@ public class State
     [Required]
     public string Name { get; set; } = null!;
 
-    public Country? Country { get; set; }
+    public State? State { get; set; }
 
     [Required]
-    public int CountryId { get; set; }
+    public int StateId { get; set; }
 }

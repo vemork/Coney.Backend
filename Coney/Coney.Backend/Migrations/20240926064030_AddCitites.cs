@@ -5,49 +5,43 @@
 namespace Coney.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCountryAndStateRelationship : Migration
+    public partial class AddCitites : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "States",
+                name: "Cities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CountryId1 = table.Column<int>(type: "int", nullable: false),
-                    CountryId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    StateId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_States", x => x.Id);
+                    table.PrimaryKey("PK_Cities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_States_Countries_CountryId1",
-                        column: x => x.CountryId1,
-                        principalTable: "Countries",
+                        name: "FK_Cities_States_StateId",
+                        column: x => x.StateId,
+                        principalTable: "States",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_States_CountryId_Name",
-                table: "States",
-                columns: new[] { "CountryId", "Name" },
+                name: "IX_Cities_StateId_Name",
+                table: "Cities",
+                columns: new[] { "StateId", "Name" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_States_CountryId1",
-                table: "States",
-                column: "CountryId1");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "States");
+                name: "Cities");
         }
     }
 }

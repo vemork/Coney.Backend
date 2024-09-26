@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coney.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240925040313_AddCountryAndStateRelationship")]
-    partial class AddCountryAndStateRelationship
+    [Migration("20240926064030_AddCitites")]
+    partial class AddCitites
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,30 @@ namespace Coney.Backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Coney.Shared.Entities.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("StateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StateId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("Cities");
+                });
 
             modelBuilder.Entity("Coney.Shared.Entities.Country", b =>
                 {
@@ -139,11 +163,7 @@ namespace Coney.Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CountryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CountryId1")
+                    b.Property<int>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -152,8 +172,6 @@ namespace Coney.Backend.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CountryId1");
 
                     b.HasIndex("CountryId", "Name")
                         .IsUnique();
@@ -200,11 +218,22 @@ namespace Coney.Backend.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Coney.Shared.Entities.City", b =>
+                {
+                    b.HasOne("Coney.Shared.Entities.State", "State")
+                        .WithMany()
+                        .HasForeignKey("StateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("State");
+                });
+
             modelBuilder.Entity("Coney.Shared.Entities.State", b =>
                 {
                     b.HasOne("Coney.Shared.Entities.Country", "Country")
                         .WithMany("States")
-                        .HasForeignKey("CountryId1")
+                        .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

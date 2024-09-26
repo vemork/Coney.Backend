@@ -5,9 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Coney.Backend.Controllers;
 
-[ApiController]
-// [Route("api/countries")]
 [Route("api/[controller]")]
+[ApiController]
 public class CountriesController : ControllerBase
 {
     private readonly DataContext _context;
@@ -17,7 +16,7 @@ public class CountriesController : ControllerBase
         _context = context;
     }
 
-    [HttpPost]
+    [HttpPost("createCountry")]
     public async Task<IActionResult> PostAsync(Country country)
     {
         _context.Add(country);
@@ -26,14 +25,14 @@ public class CountriesController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpGet]
+    [HttpGet("getAllCountries")]
     public async Task<IActionResult> GetAsync()
     {
         var successResponse = new ApiResponse<List<Country>>(true, 200, await _context.Countries.ToListAsync());
         return Ok(successResponse);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("getCountry/{id}")]
     public async Task<IActionResult> GetAsync(int id)
     {
         var country = await _context.Countries.FindAsync(id);
@@ -46,7 +45,7 @@ public class CountriesController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpPut]
+    [HttpPut("updateCountry")]
     public async Task<IActionResult> PutAsync(Country country)
     {
         var currentCountry = await _context.Countries.FindAsync(country.Id);
@@ -62,7 +61,7 @@ public class CountriesController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("deleteCountry/{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         var country = await _context.Countries.FindAsync(id);

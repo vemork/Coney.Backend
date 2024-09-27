@@ -1,70 +1,83 @@
-﻿using Coney.Backend.DTOs;
-using Coney.Backend.Services;
+﻿using Coney.Backend.Data;
+using Coney.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Coney.Backend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController : ControllerBase
+public class UsersController : ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly DataContext _context;
 
-    public UserController(UserService userService)
+    public UsersController(DataContext context)
     {
-        _userService = userService;
+        _context = context;
     }
 
-    // GET: api/User/getUsers
-    // Returns a list of all users.
-    [HttpGet("getUsers")]
-    public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
+    [HttpPost("createUser")]
+    public async Task<IActionResult> PostAsync(User user)
     {
-        var users = await _userService.GetAllUsersAsync();
-        return Ok(new { status = true, code = 200, data = users });
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        _context.Add(user);
+        await _context.SaveChangesAsync();
+        var successResponse = new ApiResponse<User>(true, 200, user);
+        return Ok(successResponse);
     }
 
-    // GET: api/User/getUserById/{id}
-    // Retrieves a user by ID.
-    [HttpGet("getUserById/{id}")]
-    public async Task<ActionResult<UserDto>> GetUserByID(int id)
+    [HttpGet("getAllUsers")]
+    public async Task<IActionResult> GetAsync()
     {
-        var user = await _userService.GetUserByIdAsync(id);
-        return Ok(new { status = true, code = 200, data = user });
+        var successResponse = new ApiResponse<List<User>>(true, 200, await _context.Users.ToListAsync());
+        return Ok(successResponse);
     }
 
-    // POST: api/User/createUser
-    // Create a new user.
-    /*[HttpPost("createUser")]
-    public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto userDto)
+    [HttpGet("getUser/{id}")]
+    public async Task<IActionResult> GetAsync(int id)
     {
-        var createdUser = await _userService.AddUserAsync(userDto);
-        return CreatedAtAction(
-            nameof(GetUserByID),
-            new { id = createdUser.Id },
-            new
-            {
-                status = true,
-                code = 201,
-                data = createdUser
-            });
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
+        }
+        var successResponse = new ApiResponse<User>(true, 200, user);
+        return Ok(successResponse);
     }
 
-    // PUT: api/User/updateUser/{id}
-    // Updates an existing user with ID.
-    [HttpPut("updateUser/{id}")]
-    public async Task<ActionResult<UserDto>> UpdateUser(int id, UpdateUserDto updateUserDto)
+    [HttpPut("updateUser")]
+    public async Task<IActionResult> PutAsync(User user)
     {
-        var updatedUser = await _userService.UpdateUserAsync(id, updateUserDto);
-        return Ok(new { status = true, code = 200, data = updatedUser });
+        var currentUser = await _context.Users.FindAsync(user.Id);
+        if (currentUser == null)
+        {
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
+        }
+        currentUser.Email = user.Email;
+        currentUser.FirstName = user.FirstName;
+        currentUser.LastName = user.LastName;
+        currentUser.UpdatedAt = DateTime.Now;
+        _context.Update(currentUser);
+        await _context.SaveChangesAsync();
+        var successResponse = new ApiResponse<List<User>>(true, 200, []);
+        return Ok(successResponse);
     }
+    
 
-    // DELETE: api/User/deleteUser/{id}
-    // Delete the user with ID.
     [HttpDelete("deleteUser/{id}")]
-    public async Task<IActionResult> DeleteUser(int id)
+    public async Task<IActionResult> DeleteAsync(int id)
     {
-        await _userService.DeleteUserAsync(id);
-        return Ok(new { status = true, code = 200, data = $"user {id} deleted" });
-    }*/
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            return Ok(NotFoundResponse);
+        }
+        _context.Remove(user);
+        await _context.SaveChangesAsync();
+        var successResponse = new ApiResponse<List<User>>(true, 200, []);
+        return Ok(successResponse);
+    }
 }

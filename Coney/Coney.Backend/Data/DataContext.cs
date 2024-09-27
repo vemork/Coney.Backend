@@ -19,12 +19,18 @@ public class DataContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Notification> Notifications { get; set; }
 
+    public DbSet<Riffle> Riffles { get; set; }
+    public DbSet<Ticket> Tickets { get; set; }
+    public DbSet<RiffleXRule> RiffleXRules { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Country>().HasIndex(x => x.Name).IsUnique();
         modelBuilder.Entity<State>().HasIndex(x => new { x.CountryId, x.Name }).IsUnique();
         modelBuilder.Entity<City>().HasIndex(c => new { c.StateId, c.Name }).IsUnique();
+        modelBuilder.Entity<Ticket>().HasIndex(t => new { t.RiffleId, t.Code }).IsUnique();
+        modelBuilder.Entity<RiffleXRule>().HasIndex(rr => new { rr.RiffleId, rr.RuleId }).IsUnique();
         modelBuilder.Entity<Prize>().Property(p => p.Value).ValueGeneratedNever();
 
         DisableCascadingDelete(modelBuilder);

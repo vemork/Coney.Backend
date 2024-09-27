@@ -4,6 +4,7 @@ using Coney.Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coney.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240927034537_AddRiffles")]
+    partial class AddRiffles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,30 +166,6 @@ namespace Coney.Backend.Migrations
                     b.ToTable("Riffles");
                 });
 
-            modelBuilder.Entity("Coney.Shared.Entities.RiffleXRule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("RiffleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RuleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RuleId");
-
-                    b.HasIndex("RiffleId", "RuleId")
-                        .IsUnique();
-
-                    b.ToTable("RiffleXRules");
-                });
-
             modelBuilder.Entity("Coney.Shared.Entities.Rule", b =>
                 {
                     b.Property<int>("Id")
@@ -236,33 +215,6 @@ namespace Coney.Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("States");
-                });
-
-            modelBuilder.Entity("Coney.Shared.Entities.Ticket", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<int>("RiffleId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("WasPaid")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RiffleId", "Code")
-                        .IsUnique();
-
-                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("Coney.Shared.Entities.User", b =>
@@ -315,25 +267,6 @@ namespace Coney.Backend.Migrations
                     b.Navigation("State");
                 });
 
-            modelBuilder.Entity("Coney.Shared.Entities.RiffleXRule", b =>
-                {
-                    b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
-                        .WithMany()
-                        .HasForeignKey("RiffleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Coney.Shared.Entities.Rule", "Rule")
-                        .WithMany()
-                        .HasForeignKey("RuleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Riffle");
-
-                    b.Navigation("Rule");
-                });
-
             modelBuilder.Entity("Coney.Shared.Entities.State", b =>
                 {
                     b.HasOne("Coney.Shared.Entities.Country", "Country")
@@ -343,17 +276,6 @@ namespace Coney.Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
-                });
-
-            modelBuilder.Entity("Coney.Shared.Entities.Ticket", b =>
-                {
-                    b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
-                        .WithMany()
-                        .HasForeignKey("RiffleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Riffle");
                 });
 
             modelBuilder.Entity("Coney.Shared.Entities.Country", b =>

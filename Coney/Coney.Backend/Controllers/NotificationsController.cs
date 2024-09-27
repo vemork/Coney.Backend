@@ -16,7 +16,7 @@ public class NotificationsController : ControllerBase
         _context = context;
     }
 
-    [HttpPost]
+    [HttpPost("createNotification")]
     public async Task<IActionResult> PostAsync(Notification notification)
     {
         _context.Add(notification);
@@ -25,14 +25,14 @@ public class NotificationsController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpGet]
+    [HttpGet("getAllNotifications")]
     public async Task<IActionResult> GetAsync()
     {
         var successResponse = new ApiResponse<List<Notification>>(true, 200, await _context.Notifications.ToListAsync());
         return Ok(successResponse);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("getNotification/{id}")]
     public async Task<IActionResult> GetAsync(int id)
     {
         var notification = await _context.Notifications.FindAsync(id);
@@ -45,7 +45,7 @@ public class NotificationsController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpPut]
+    [HttpPut("updateNotification")]
     public async Task<IActionResult> PutAsync(Notification notification)
     {
         var currentNotification = await _context.Notifications.FindAsync(notification.Id);
@@ -64,7 +64,7 @@ public class NotificationsController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("deleteNotification/{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         var notification = await _context.Notifications.FindAsync(id);

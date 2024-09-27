@@ -16,7 +16,7 @@ public class RulesController : ControllerBase
         _context = context;
     }
 
-    [HttpPost]
+    [HttpPost("createRule")]
     public async Task<IActionResult> PostAsync(Rule rule)
     {
         _context.Add(rule);
@@ -25,14 +25,14 @@ public class RulesController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpGet]
+    [HttpGet("getAllRules")]
     public async Task<IActionResult> GetAsync()
     {
         var successResponse = new ApiResponse<List<Rule>>(true, 200, await _context.Rules.ToListAsync());
         return Ok(successResponse);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("getRule/{id}")]
     public async Task<IActionResult> GetAsync(int id)
     {
         var rule = await _context.Rules.FindAsync(id);
@@ -45,7 +45,7 @@ public class RulesController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpPut]
+    [HttpPut("updateRule")]
     public async Task<IActionResult> PutAsync(Rule rule)
     {
         var currentRule = await _context.Rules.FindAsync(rule.Id);
@@ -65,7 +65,7 @@ public class RulesController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("deleteRule/{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         var rule = await _context.Rules.FindAsync(id);

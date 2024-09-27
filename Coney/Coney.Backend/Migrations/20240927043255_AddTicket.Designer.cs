@@ -4,6 +4,7 @@ using Coney.Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coney.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240927043255_AddTicket")]
+    partial class AddTicket
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,30 +166,6 @@ namespace Coney.Backend.Migrations
                     b.ToTable("Riffles");
                 });
 
-            modelBuilder.Entity("Coney.Shared.Entities.RiffleXRule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("RiffleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RuleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RuleId");
-
-                    b.HasIndex("RiffleId", "RuleId")
-                        .IsUnique();
-
-                    b.ToTable("RiffleXRules");
-                });
-
             modelBuilder.Entity("Coney.Shared.Entities.Rule", b =>
                 {
                     b.Property<int>("Id")
@@ -313,25 +292,6 @@ namespace Coney.Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("State");
-                });
-
-            modelBuilder.Entity("Coney.Shared.Entities.RiffleXRule", b =>
-                {
-                    b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
-                        .WithMany()
-                        .HasForeignKey("RiffleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Coney.Shared.Entities.Rule", "Rule")
-                        .WithMany()
-                        .HasForeignKey("RuleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Riffle");
-
-                    b.Navigation("Rule");
                 });
 
             modelBuilder.Entity("Coney.Shared.Entities.State", b =>

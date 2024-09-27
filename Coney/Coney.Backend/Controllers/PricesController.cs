@@ -16,7 +16,7 @@ public class PricesController : ControllerBase
         _context = context;
     }
 
-    [HttpPost]
+    [HttpPost("createPrize")]
     public async Task<IActionResult> PostAsync(Prize prize)
     {
         _context.Add(prize);
@@ -25,14 +25,14 @@ public class PricesController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpGet]
+    [HttpGet("getAllPrices")]
     public async Task<IActionResult> GetAsync()
     {
         var successResponse = new ApiResponse<List<Prize>>(true, 200, await _context.Prices.ToListAsync());
         return Ok(successResponse);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("getPrize/{id}")]
     public async Task<IActionResult> GetAsync(int id)
     {
         var prize = await _context.Prices.FindAsync(id);
@@ -45,7 +45,7 @@ public class PricesController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpPut]
+    [HttpPut("updatePrize")]
     public async Task<IActionResult> PutAsync(Prize prize)
     {
         var currentPrize = await _context.Prices.FindAsync(prize.Id);
@@ -66,7 +66,7 @@ public class PricesController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("deletePrize/{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         var prize = await _context.Prices.FindAsync(id);

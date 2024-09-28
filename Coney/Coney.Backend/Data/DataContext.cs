@@ -22,6 +22,10 @@ public class DataContext : DbContext
     public DbSet<Riffle> Riffles { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<RiffleXRule> RiffleXRules { get; set; }
+    public DbSet<Support> Supports { get; set; }
+
+    public DbSet<Winner> Winners { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,6 +36,7 @@ public class DataContext : DbContext
         modelBuilder.Entity<Ticket>().HasIndex(t => new { t.RiffleId, t.Code }).IsUnique();
         modelBuilder.Entity<RiffleXRule>().HasIndex(rr => new { rr.RiffleId, rr.RuleId }).IsUnique();
         modelBuilder.Entity<Prize>().Property(p => p.Value).ValueGeneratedNever();
+        modelBuilder.Entity<Winner>().HasIndex(w => new { w.PrizeId, w.UserId, w.RiffleId }).IsUnique();
 
         DisableCascadingDelete(modelBuilder);
     }

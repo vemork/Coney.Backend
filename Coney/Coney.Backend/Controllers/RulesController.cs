@@ -21,7 +21,7 @@ public class RulesController : ControllerBase
     {
         _context.Add(rule);
         await _context.SaveChangesAsync();
-        var successResponse = new ApiResponse<Rule>(true, 200, rule);
+        var successResponse = new ApiResponse<Rule>(true, 201, rule);
         return Ok(successResponse);
     }
 

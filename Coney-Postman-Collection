@@ -279,13 +279,13 @@
 			"name": "RIFFLE",
 			"item": [
 				{
-					"name": "Create Riffle",
+					"name": "createRiffle",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"Rifa2\",\r\n    \"Description\": \"Rifa pro fondos coljuegos 2\",\r\n    \"InitDate\": \"2024-09-26T14:30:00Z\",\r\n    \"EndtDate\": \"2024-10-26T14:30:00Z\",\r\n    \"amountTickets\": 200,\r\n    \"amountBusyTickets\": 0\r\n}",
+							"raw": "{\r\n    \"Name\": \"Rifa4\",\r\n    \"Description\": \"Rifa pro fondos coljuegos 2\",\r\n    \"InitDate\": \"2024-09-26T14:30:00Z\",\r\n    \"EndtDate\": \"2024-10-26T14:30:00Z\",\r\n    \"amountTickets\": 200,\r\n    \"amountBusyTickets\": 0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -293,12 +293,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:7104/api/Riffles/createRiffle",
-							"protocol": "https",
+							"raw": "{{url}}/api/Riffles/createRiffle",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "7104",
 							"path": [
 								"api",
 								"Riffles",
@@ -309,7 +307,7 @@
 					"response": []
 				},
 				{
-					"name": "GET ALL RIFFLES",
+					"name": "getAllRiffle",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -330,7 +328,7 @@
 					"response": []
 				},
 				{
-					"name": "GET RIFFLE BY ID",
+					"name": "getRiffleById",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -352,7 +350,7 @@
 					"response": []
 				},
 				{
-					"name": "PUT UPDATE RIFFLE",
+					"name": "updateRiffle",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -382,7 +380,7 @@
 					"response": []
 				},
 				{
-					"name": "DELETE RIFFLE",
+					"name": "deleteRiffle",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -539,7 +537,7 @@
 			"name": "RULES",
 			"item": [
 				{
-					"name": "POST CREATE RULE",
+					"name": "createRule",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -553,12 +551,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:7104/api/Rules/createRule",
-							"protocol": "https",
+							"raw": "{{url}}/api/Rules/createRule",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "7104",
 							"path": [
 								"api",
 								"Rules",
@@ -569,7 +565,7 @@
 					"response": []
 				},
 				{
-					"name": "GET ALL RULES",
+					"name": "getAllRules",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -584,6 +580,71 @@
 								"api",
 								"Rules",
 								"getAllRules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRuleById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Rules/getRule/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Rules",
+								"getRule",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateRule",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 1,\r\n  \"description\": \"prueba\",\r\n  \"initDate\": \"2024-09-29T03:06:57.983Z\",\r\n  \"endtDate\": \"2024-09-29T03:06:57.983Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/Rules/updateRule",
+							"path": [
+								"api",
+								"Rules",
+								"updateRule"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteRule",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Rules/deleteRule/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Rules",
+								"deleteRule",
+								"1"
 							]
 						}
 					},
@@ -1531,7 +1592,7 @@
 					"response": []
 				},
 				{
-					"name": "getCountry",
+					"name": "getCountryById",
 					"request": {
 						"method": "GET",
 						"header": [],

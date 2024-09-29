@@ -2,6 +2,7 @@
 using Coney.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Coney.Backend.DTOs;
 
 namespace Coney.Backend.Controllers;
 
@@ -22,7 +23,7 @@ public class UsersController : ControllerBase
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         _context.Add(user);
         await _context.SaveChangesAsync();
-        var successResponse = new ApiResponse<User>(true, 200, user);
+        var successResponse = new ApiResponse<User>(true, 201, user);
         return Ok(successResponse);
     }
 
@@ -46,23 +47,37 @@ public class UsersController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpPut("updateUser")]
-    public async Task<IActionResult> PutAsync(User user)
+    [HttpPut("updateUser/{id}")]    
+    public async Task<IActionResult> PutAsync(int id,UpdateUserDto userDto)
     {
-        var currentUser = await _context.Users.FindAsync(user.Id);
-        if (currentUser == null)
+        try
         {
-            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
-            return Ok(NotFoundResponse);
+            var currentUser = await _context.Users.FindAsync(id);
+            if (currentUser == null)
+            {
+                var notFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "Usuario no encontrado" });
+                return NotFound(notFoundResponse);
+            }
+
+            if (!string.IsNullOrEmpty(userDto.Password))
+            {
+                currentUser.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+            }
+
+            currentUser.FirstName = userDto.FirstName ?? currentUser.FirstName ;
+            currentUser.LastName = userDto.LastName ?? currentUser.LastName;
+            currentUser.UpdatedAt = DateTime.Now;
+
+            _context.Update(currentUser);
+            await _context.SaveChangesAsync();
+
+            var successResponse = new ApiResponse<List<User>>(true, 200, new List<User> { currentUser });
+            return Ok(successResponse);
         }
-        currentUser.Email = user.Email;
-        currentUser.FirstName = user.FirstName;
-        currentUser.LastName = user.LastName;
-        currentUser.UpdatedAt = DateTime.Now;
-        _context.Update(currentUser);
-        await _context.SaveChangesAsync();
-        var successResponse = new ApiResponse<List<User>>(true, 200, []);
-        return Ok(successResponse);
+        catch (Exception ex)
+        {   
+            return BadRequest(ex);
+        }
     }
     
 

@@ -1,8 +1,6 @@
-﻿using Coney.Backend.Data;
-using Coney.Backend.Repositories;
+﻿using Coney.Backend.Repositories;
 using Coney.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Coney.Backend.Controllers;
 

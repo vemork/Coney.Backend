@@ -36,7 +36,7 @@ public class DataContext : DbContext
         modelBuilder.Entity<Country>().HasIndex(x => x.Name).IsUnique();
         modelBuilder.Entity<State>().HasIndex(x => new { x.CountryId, x.Name }).IsUnique();
         modelBuilder.Entity<City>().HasIndex(c => new { c.StateId, c.Name }).IsUnique();
-        modelBuilder.Entity<Ticket>().HasIndex(t => new { t.RiffleId, t.Code }).IsUnique();
+        modelBuilder.Entity<Ticket>().HasIndex(t => new { t.RiffleId, t.UserId, t.TicketNumber }).IsUnique();
         modelBuilder.Entity<RiffleXRule>().HasIndex(rr => new { rr.RiffleId, rr.RuleId }).IsUnique();
         modelBuilder.Entity<UserXRiffle>().HasIndex(ur => new { ur.RiffleId, ur.UserId }).IsUnique();
         modelBuilder.Entity<Prize>().Property(p => p.Value).ValueGeneratedNever();

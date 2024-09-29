@@ -1,7 +1,6 @@
-﻿using Coney.Backend.Data;
+﻿using Coney.Backend.Repositories;
 using Coney.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Coney.Backend.Controllers;
 
@@ -9,72 +8,92 @@ namespace Coney.Backend.Controllers;
 [Route("api/[controller]")]
 public class TicketsController : ControllerBase
 {
-    private readonly DataContext _context;
+    private readonly TicketRepository _ticketRepository;
 
-    public TicketsController(DataContext context)
+    public TicketsController(TicketRepository ticketRepository)
     {
-        _context = context;
+        _ticketRepository = ticketRepository;
     }
 
     [HttpPost("createTicket")]
     public async Task<IActionResult> PostAsync(Ticket ticket)
     {
-        _context.Add(ticket);
-        await _context.SaveChangesAsync();
-        var successResponse = new ApiResponse<Ticket>(true, 200, ticket);
-        return Ok(successResponse);
+        try
+        {
+            await _ticketRepository.AddAsync(ticket);
+            var successResponse = new ApiResponse<Ticket>(true, 201, ticket);
+            return Ok(successResponse);
+        }
+        catch (Exception ex)
+        {
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error creating record..." });
+            return Conflict(sqlException);
+        }
     }
 
     [HttpGet("getAllTickets")]
     public async Task<IActionResult> GetAsync()
     {
-        var successResponse = new ApiResponse<List<Ticket>>(true, 200, await _context.Tickets.ToListAsync());
+        var successResponse = new ApiResponse<IEnumerable<Ticket>>(true, 200, await _ticketRepository.GetAllAsync());
         return Ok(successResponse);
     }
 
     [HttpGet("getTicket/{id}")]
     public async Task<IActionResult> GetAsync(int id)
     {
-        var ticket = await _context.Tickets.FindAsync(id);
+        var ticket = await _ticketRepository.GetByIdAsync(id);
         if (ticket == null)
         {
-            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "Ticket not found" });
             return Ok(NotFoundResponse);
         }
         var successResponse = new ApiResponse<Ticket>(true, 200, ticket);
         return Ok(successResponse);
     }
 
-    [HttpPut("updateTicket")]
-    public async Task<IActionResult> PutAsync(Ticket ticket)
+    [HttpPut("updateTicket/{id}")]
+    public async Task<IActionResult> PutAsync(int id, Ticket ticket)
     {
-        var currentTicket = await _context.Tickets.FindAsync(ticket.Id);
-        if (currentTicket == null)
+        try
         {
-            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
-            return Ok(NotFoundResponse);
+            var currentTicket = await _ticketRepository.FindTicketAsync(id);
+            if (currentTicket == null)
+            {
+                var NotFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "Ticket not found" });
+                return Ok(NotFoundResponse);
+            }
+            currentTicket.TicketNumber = ticket.TicketNumber;
+            currentTicket.UserId = ticket.UserId;
+            currentTicket.RiffleId = ticket.RiffleId;
+            await _ticketRepository.UpdateAsync(currentTicket);
+            var successResponse = new ApiResponse<List<Ticket>>(true, 200, new List<Ticket> { currentTicket });
+            return Ok(successResponse);
         }
-        currentTicket.Code = ticket.Code;
-        currentTicket.WasPaid = ticket.WasPaid;
-        currentTicket.RiffleId = ticket.RiffleId;
-        _context.Update(currentTicket);
-        await _context.SaveChangesAsync();
-        var successResponse = new ApiResponse<List<Ticket>>(true, 200, []);
-        return Ok(successResponse);
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
     }
 
     [HttpDelete("deleteTicket/{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        var ticket = await _context.Tickets.FindAsync(id);
-        if (ticket == null)
+        try
         {
-            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
-            return Ok(NotFoundResponse);
+            var ticket = await _ticketRepository.FindTicketAsync(id);
+            if (ticket == null)
+            {
+                var NotFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "Ticket not found" });
+                return Ok(NotFoundResponse);
+            }
+            await _ticketRepository.DeleteAsync(ticket);
+            var successResponse = new ApiResponse<List<Ticket>>(true, 200, []);
+            return Ok(successResponse);
         }
-        _context.Remove(ticket);
-        await _context.SaveChangesAsync();
-        var successResponse = new ApiResponse<List<Ticket>>(true, 200, []);
-        return Ok(successResponse);
+        catch (Exception ex)
+        {
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error deleting record..." });
+            return Conflict(sqlException);
+        }
     }
 }

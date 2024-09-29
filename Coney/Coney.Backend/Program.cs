@@ -11,6 +11,7 @@ builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnec
 builder.Services.AddScoped<CountryRepository, CountryRepository>();
 builder.Services.AddScoped<UserRepository, UserRepository>();
 builder.Services.AddScoped<RiffleRepository, RiffleRepository>();
+builder.Services.AddScoped<TicketRepository, TicketRepository>();
 
 // CORS
 builder.Services.AddCors(options =>

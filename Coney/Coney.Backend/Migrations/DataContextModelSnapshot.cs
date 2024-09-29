@@ -303,20 +303,21 @@ namespace Coney.Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
                     b.Property<int>("RiffleId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("WasPaid")
-                        .HasColumnType("bit");
+                    b.Property<string>("TicketNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RiffleId", "Code")
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("RiffleId", "UserId", "TicketNumber")
                         .IsUnique();
 
                     b.ToTable("Tickets");
@@ -507,7 +508,15 @@ namespace Coney.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Coney.Shared.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Riffle");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Coney.Shared.Entities.UserXRiffle", b =>

@@ -6,14 +6,16 @@ public class Ticket
 {
     public int Id { get; set; }
 
-    [MaxLength(10)]
     [Required]
-    public string Code { get; set; } = null!;
-
-    public bool WasPaid { get; set; } = false;
+    public string TicketNumber { get; set; } = null!;
 
     public Riffle? Riffle { get; set; }
 
     [Required]
     public int RiffleId { get; set; }
+
+    public User? User { get; set; }
+
+    [Required]
+    public int UserId { get; set; }
 }

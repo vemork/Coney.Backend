@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "0732e887-d16c-42fb-b562-11e598aa42c0",
-		"name": "New Collection",
+		"_postman_id": "1f01638d-be8c-4b5a-a773-f52d9af54409",
+		"name": "vemork/coney",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "6804902"
+		"_exporter_id": "10141207"
 	},
 	"item": [
 		{
@@ -725,13 +725,13 @@
 			"name": "USERS",
 			"item": [
 				{
-					"name": "POST CREATE USER",
+					"name": "createUser",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"doyler@gmail.com\",\r\n  \"firstName\": \"Doyler\",\r\n  \"lastName\": \"Rubio\",\r\n  \"password\": \"123456\"\r\n}",
+							"raw": "{\r\n  \"email\": \"dev@gmail.com\",\r\n  \"firstName\": \"Devisson\",\r\n  \"lastName\": \"vasquez\",\r\n  \"password\": \"123456\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -739,12 +739,10 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:7104/api/Users/createUser",
-							"protocol": "https",
+							"raw": "{{url}}/api/Users/createUser",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "7104",
 							"path": [
 								"api",
 								"Users",
@@ -755,34 +753,114 @@
 					"response": []
 				},
 				{
-					"name": "GET ALL USERS",
+					"name": "getAllUser",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Users/getAllUsers",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"getAllUsers"
+							]
+						}
 					},
 					"response": []
 				},
 				{
-					"name": "GET USER BY ID",
+					"name": "getUserById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Users/getUser/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"getUser",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
 				{
-					"name": "PUT UPDATE USER",
+					"name": "updateUser",
 					"request": {
 						"method": "PUT",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Dev\",\r\n    \"lastName\": \"Prueba\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Users/updateUser/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"updateUser",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
 				{
-					"name": "DELETE USER",
+					"name": "deleteUser",
 					"request": {
-						"method": "PUT",
-						"header": []
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Users/deleteUser/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"deleteUser",
+								"1"
+							]
+						}
 					},
 					"response": []
 				}
@@ -825,7 +903,10 @@
 					"name": "GET ALL SUPPORTS",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -833,7 +914,10 @@
 					"name": "GET SUPPORT BY ID",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1324,7 +1408,10 @@
 					"name": "GET ALL USER X RIFFLE",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1332,7 +1419,10 @@
 					"name": "GET USER X RIFFLE ID",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1389,6 +1479,35 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://localhost:7104",
+			"type": "string"
 		}
 	]
 }

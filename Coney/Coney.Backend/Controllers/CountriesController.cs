@@ -21,7 +21,7 @@ public class CountriesController : ControllerBase
     {
         _context.Add(country);
         await _context.SaveChangesAsync();
-        var successResponse = new ApiResponse<Country>(true, 200, country);
+        var successResponse = new ApiResponse<Country>(true, 201, country);
         return Ok(successResponse);
     }
 

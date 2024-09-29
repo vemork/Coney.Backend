@@ -1479,6 +1479,126 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "COUNTRIES",
+			"item": [
+				{
+					"name": "createCountry",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Venezuela\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Countries/createCountry",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Countries",
+								"createCountry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCountries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Countries/getAllCountries",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Countries",
+								"getAllCountries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCountry",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Countries/getCountry/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Countries",
+								"getCountry",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCountry",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 1,\r\n  \"name\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Countries/updateCountry",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Countries",
+								"updateCountry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCountry",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Countries/deleteCountry/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Countries",
+								"deleteCountry",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [

@@ -1,11 +1,510 @@
 {
 	"info": {
-		"_postman_id": "1f01638d-be8c-4b5a-a773-f52d9af54409",
+		"_postman_id": "1aed2cad-e6ba-421b-b503-e428f8539487",
 		"name": "vemork/coney",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "10141207"
+		"_exporter_id": "6804902",
+		"_collection_link": "https://martian-desert-490605.postman.co/workspace/CONEY~68025535-7ed4-418b-871f-cfb190e09ac1/collection/6804902-1aed2cad-e6ba-421b-b503-e428f8539487?action=share&source=collection_link&creator=6804902"
 	},
 	"item": [
+		{
+			"name": "COUNTRIES",
+			"item": [
+				{
+					"name": "createCountry",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Venezuela\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Countries/createCountry",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Countries",
+								"createCountry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCountries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Countries/getAllCountries",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Countries",
+								"getAllCountries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCountryById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Countries/getCountry/10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Countries",
+								"getCountry",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCountry",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Peru\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Countries/updateCountry/5",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Countries",
+								"updateCountry",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCountry",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Countries/deleteCountry/10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Countries",
+								"deleteCountry",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USERS",
+			"item": [
+				{
+					"name": "createUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"dev@gmail.com\",\r\n  \"firstName\": \"Devisson\",\r\n  \"lastName\": \"vasquez\",\r\n  \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Users/createUser",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"createUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllUser",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Users/getAllUsers",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"getAllUsers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Users/getUser/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"getUser",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUser",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Dev\",\r\n    \"lastName\": \"Vas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Users/updateUser/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"updateUser",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Users/deleteUser/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"deleteUser",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RIFFLE",
+			"item": [
+				{
+					"name": "createRiffle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Rifa4\",\r\n    \"Description\": \"Rifa pro fondos coljuegos 2\",\r\n    \"InitDate\": \"2024-09-26T14:30:00Z\",\r\n    \"EndtDate\": \"2024-10-26T14:30:00Z\",\r\n    \"amountTickets\": 200,\r\n    \"amountBusyTickets\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Riffles/createRiffle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Riffles",
+								"createRiffle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllRiffle",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Riffles/getAllRiffles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Riffles",
+								"getAllRiffles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRiffleById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Riffles/getRiffle/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Riffles",
+								"getRiffle",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateRiffle",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Rifa 2 para gamers\",\r\n    \"Description\": \"Rifa pro fondos mundial de e sports 2\",\r\n    \"InitDate\": \"2024-09-26T14:30:00Z\",\r\n    \"EndtDate\": \"2024-10-26T14:30:00Z\",\r\n    \"amountTickets\": 2000,\r\n    \"amountBusyTickets\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/Riffles/updateRiffle/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Riffles",
+								"updateRiffle",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteRiffle",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Riffles/deleteRiffle/10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Riffles",
+								"deleteRiffle",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USER X RIFFLE",
+			"item": [
+				{
+					"name": "POST CREATE USER X RIFFLE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/UserXRiffles/createUserXRiffle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"UserXRiffles",
+								"createUserXRiffle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL USER X RIFFLE",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/States/getAllStates",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"States",
+								"getAllStates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET USER X RIFFLE ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT USER X RIFFLE",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/UserXRiffles/updateUserXRiffle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"UserXRiffles",
+								"updateUserXRiffle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET USER X RIFFLE ID Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/UserXRiffles/getUserXRiffle/3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"UserXRiffles",
+								"getUserXRiffle",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "STATE",
 			"item": [
@@ -267,134 +766,6 @@
 								"api",
 								"Cities",
 								"deleteCity",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RIFFLE",
-			"item": [
-				{
-					"name": "createRiffle",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"Rifa4\",\r\n    \"Description\": \"Rifa pro fondos coljuegos 2\",\r\n    \"InitDate\": \"2024-09-26T14:30:00Z\",\r\n    \"EndtDate\": \"2024-10-26T14:30:00Z\",\r\n    \"amountTickets\": 200,\r\n    \"amountBusyTickets\": 0\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/api/Riffles/createRiffle",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Riffles",
-								"createRiffle"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getAllRiffle",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:7104/api/Riffles/getAllRiffles",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "7104",
-							"path": [
-								"api",
-								"Riffles",
-								"getAllRiffles"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getRiffleById",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:7104/api/Riffles/getRiffle/2",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "7104",
-							"path": [
-								"api",
-								"Riffles",
-								"getRiffle",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "updateRiffle",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": 2,\r\n    \"Name\": \"Rifa 2 para gamers\",\r\n    \"Description\": \"Rifa pro fondos mundial de e sports 2\",\r\n    \"InitDate\": \"2024-09-26T14:30:00Z\",\r\n    \"EndtDate\": \"2024-10-26T14:30:00Z\",\r\n    \"amountTickets\": 2000,\r\n    \"amountBusyTickets\": 0\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://localhost:7104/api/Riffles/updateRiffle",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "7104",
-							"path": [
-								"api",
-								"Riffles",
-								"updateRiffle"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "deleteRiffle",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:7104/api/Riffles/deleteRiffle/1",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "7104",
-							"path": [
-								"api",
-								"Riffles",
-								"deleteRiffle",
 								"1"
 							]
 						}
@@ -774,151 +1145,6 @@
 								"api",
 								"RiffleXRules",
 								"deleteRiffleXRule",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "USERS",
-			"item": [
-				{
-					"name": "createUser",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"dev@gmail.com\",\r\n  \"firstName\": \"Devisson\",\r\n  \"lastName\": \"vasquez\",\r\n  \"password\": \"123456\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/api/Users/createUser",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Users",
-								"createUser"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getAllUser",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/api/Users/getAllUsers",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Users",
-								"getAllUsers"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getUserById",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/api/Users/getUser/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Users",
-								"getUser",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "updateUser",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Dev\",\r\n    \"lastName\": \"Prueba\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/api/Users/updateUser/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Users",
-								"updateUser",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "deleteUser",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/api/Users/deleteUser/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Users",
-								"deleteUser",
 								"1"
 							]
 						}
@@ -1425,235 +1651,6 @@
 								"api",
 								"Comments",
 								"updateComment"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "USER X RIFFLE",
-			"item": [
-				{
-					"name": "POST CREATE USER X RIFFLE",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://localhost:7104/api/UserXRiffles/createUserXRiffle",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "7104",
-							"path": [
-								"api",
-								"UserXRiffles",
-								"createUserXRiffle"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET ALL USER X RIFFLE",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET USER X RIFFLE ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "PUT USER X RIFFLE",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\":3\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://localhost:7104/api/UserXRiffles/updateUserXRiffle",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "7104",
-							"path": [
-								"api",
-								"UserXRiffles",
-								"updateUserXRiffle"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET USER X RIFFLE ID Copy",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:7104/api/UserXRiffles/getUserXRiffle/3",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "7104",
-							"path": [
-								"api",
-								"UserXRiffles",
-								"getUserXRiffle",
-								"3"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "COUNTRIES",
-			"item": [
-				{
-					"name": "createCountry",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Venezuela\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/api/Countries/createCountry",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Countries",
-								"createCountry"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getAllCountries",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/api/Countries/getAllCountries",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Countries",
-								"getAllCountries"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getCountryById",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/api/Countries/getCountry/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Countries",
-								"getCountry",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "updateCountry",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"id\": 1,\r\n  \"name\": \"string\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/api/Countries/updateCountry",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Countries",
-								"updateCountry"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "deleteCountry",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/api/Countries/deleteCountry/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"api",
-								"Countries",
-								"deleteCountry",
-								"1"
 							]
 						}
 					},

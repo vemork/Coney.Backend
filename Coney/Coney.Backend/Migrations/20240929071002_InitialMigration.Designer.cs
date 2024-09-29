@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coney.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240927184731_AddUsers")]
-    partial class AddUsers
+    [Migration("20240929071002_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,37 @@ namespace Coney.Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("Coney.Shared.Entities.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateComment")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Observations")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("RiffleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RiffleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Coney.Shared.Entities.Country", b =>
@@ -151,16 +182,6 @@ namespace Coney.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("amountBusyTickets")
-                        .HasColumnType("int");
-
-                    b.Property<int>("amountTickets")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Riffles");
@@ -241,6 +262,42 @@ namespace Coney.Backend.Migrations
                     b.ToTable("States");
                 });
 
+            modelBuilder.Entity("Coney.Shared.Entities.Support", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsResolved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PersonInCharge")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Supports");
+                });
+
             modelBuilder.Entity("Coney.Shared.Entities.Ticket", b =>
                 {
                     b.Property<int>("Id")
@@ -304,7 +361,74 @@ namespace Coney.Backend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Coney.Shared.Entities.UserXRiffle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RiffleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("RiffleId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserXRiffles");
+                });
+
+            modelBuilder.Entity("Coney.Shared.Entities.Winner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Observations")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("PrizeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RiffleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("WasDelivered")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RiffleId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("PrizeId", "UserId", "RiffleId")
+                        .IsUnique();
+
+                    b.ToTable("Winners");
                 });
 
             modelBuilder.Entity("Coney.Shared.Entities.City", b =>
@@ -316,6 +440,25 @@ namespace Coney.Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("State");
+                });
+
+            modelBuilder.Entity("Coney.Shared.Entities.Comment", b =>
+                {
+                    b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
+                        .WithMany()
+                        .HasForeignKey("RiffleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Coney.Shared.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Riffle");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Coney.Shared.Entities.RiffleXRule", b =>
@@ -348,6 +491,17 @@ namespace Coney.Backend.Migrations
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("Coney.Shared.Entities.Support", b =>
+                {
+                    b.HasOne("Coney.Shared.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Coney.Shared.Entities.Ticket", b =>
                 {
                     b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
@@ -357,6 +511,52 @@ namespace Coney.Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Riffle");
+                });
+
+            modelBuilder.Entity("Coney.Shared.Entities.UserXRiffle", b =>
+                {
+                    b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
+                        .WithMany()
+                        .HasForeignKey("RiffleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Coney.Shared.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Riffle");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Coney.Shared.Entities.Winner", b =>
+                {
+                    b.HasOne("Coney.Shared.Entities.Prize", "Prize")
+                        .WithMany()
+                        .HasForeignKey("PrizeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
+                        .WithMany()
+                        .HasForeignKey("RiffleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Coney.Shared.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Prize");
+
+                    b.Navigation("Riffle");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Coney.Shared.Entities.Country", b =>

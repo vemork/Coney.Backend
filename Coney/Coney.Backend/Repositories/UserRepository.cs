@@ -35,24 +35,27 @@ public class UserRepository
     // Update user information
     public async Task UpdateAsync(User user)
     {
-        _context.Entry(user).State = EntityState.Modified;
+        //_context.Entry(user).State = EntityState.Modified;
+        _context.Users.Update(user);
         await _context.SaveChangesAsync();
     }
 
     // Delete the information of a single user using the id
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(User user)
     {
-        var user = await _context.Users.FindAsync(id);
-        if (user != null)
-        {
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-        }
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
     }
 
     // returns the information of a single user using the email
     public async Task<User?> GetByEmailAsync(string email)
     {
         return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    }
+
+    // returns the information about User
+    public async Task<User?> FindUserAsync(int id)
+    {
+        return await _context.Users.FindAsync(id);
     }
 }

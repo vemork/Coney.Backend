@@ -18,11 +18,4 @@ public class Riffle
 
     [Required]
     public DateTimeOffset EndtDate { get; set; }
-
-    public string Status { get; set; } = "Pending";
-
-    [Required]
-    public int amountTickets { get; set; }
-
-    public int amountBusyTickets { get; set; }
 }

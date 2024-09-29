@@ -1,8 +1,8 @@
-﻿using Coney.Backend.Data;
-using Coney.Shared.Entities;
+﻿using Coney.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Coney.Backend.Repositories;
 using Coney.Backend.DTOs;
+using Microsoft.VisualBasic;
 
 namespace Coney.Backend.Controllers;
 
@@ -10,52 +10,59 @@ namespace Coney.Backend.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly DataContext _context;
+    private readonly UserRepository _userRepository;
 
-    public UsersController(DataContext context)
+    public UsersController(UserRepository userRepository)
     {
-        _context = context;
+        _userRepository = userRepository;
     }
 
     [HttpPost("createUser")]
     public async Task<IActionResult> PostAsync(User user)
     {
-        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-        _context.Add(user);
-        await _context.SaveChangesAsync();
-        var successResponse = new ApiResponse<User>(true, 201, user);
-        return Ok(successResponse);
+        try
+        {
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            await _userRepository.AddAsync(user);
+            var successResponse = new ApiResponse<User>(true, 201, user);
+            return Ok(successResponse);
+        }
+        catch (Exception ex)
+        {
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error creating record..." });
+            return Conflict(sqlException);
+        }
     }
 
     [HttpGet("getAllUsers")]
     public async Task<IActionResult> GetAsync()
     {
-        var successResponse = new ApiResponse<List<User>>(true, 200, await _context.Users.ToListAsync());
+        var successResponse = new ApiResponse<IEnumerable<User>>(true, 200, await _userRepository.GetAllAsync());
         return Ok(successResponse);
     }
 
     [HttpGet("getUser/{id}")]
     public async Task<IActionResult> GetAsync(int id)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await _userRepository.GetByIdAsync(id);
         if (user == null)
         {
-            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
+            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "User not found" });
             return Ok(NotFoundResponse);
         }
         var successResponse = new ApiResponse<User>(true, 200, user);
         return Ok(successResponse);
     }
 
-    [HttpPut("updateUser/{id}")]    
-    public async Task<IActionResult> PutAsync(int id,UpdateUserDto userDto)
+    [HttpPut("updateUser/{id}")]
+    public async Task<IActionResult> PutAsync(int id, UpdateUserDto userDto)
     {
         try
         {
-            var currentUser = await _context.Users.FindAsync(id);
+            var currentUser = await _userRepository.FindUserAsync(id);
             if (currentUser == null)
             {
-                var notFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "Usuario no encontrado" });
+                var notFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "User not found" });
                 return NotFound(notFoundResponse);
             }
 
@@ -64,35 +71,39 @@ public class UsersController : ControllerBase
                 currentUser.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
             }
 
-            currentUser.FirstName = userDto.FirstName ?? currentUser.FirstName ;
+            currentUser.FirstName = userDto.FirstName ?? currentUser.FirstName;
             currentUser.LastName = userDto.LastName ?? currentUser.LastName;
             currentUser.UpdatedAt = DateTime.Now;
 
-            _context.Update(currentUser);
-            await _context.SaveChangesAsync();
-
+            await _userRepository.UpdateAsync(currentUser);
             var successResponse = new ApiResponse<List<User>>(true, 200, new List<User> { currentUser });
             return Ok(successResponse);
         }
         catch (Exception ex)
-        {   
+        {
             return BadRequest(ex);
         }
     }
-    
 
     [HttpDelete("deleteUser/{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        var user = await _context.Users.FindAsync(id);
-        if (user == null)
+        try
         {
-            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, []);
-            return Ok(NotFoundResponse);
+            var user = await _userRepository.FindUserAsync(id);
+            if (user == null)
+            {
+                var NotFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "User not found" });
+                return Ok(NotFoundResponse);
+            }
+            await _userRepository.DeleteAsync(user);
+            var successResponse = new ApiResponse<List<User>>(true, 200, []);
+            return Ok(successResponse);
         }
-        _context.Remove(user);
-        await _context.SaveChangesAsync();
-        var successResponse = new ApiResponse<List<User>>(true, 200, []);
-        return Ok(successResponse);
+        catch (Exception ex)
+        {
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error deleting record..." });
+            return Conflict(sqlException);
+        }
     }
 }

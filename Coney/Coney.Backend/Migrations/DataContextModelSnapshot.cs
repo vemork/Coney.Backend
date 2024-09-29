@@ -179,16 +179,6 @@ namespace Coney.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("amountBusyTickets")
-                        .HasColumnType("int");
-
-                    b.Property<int>("amountTickets")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Riffles");

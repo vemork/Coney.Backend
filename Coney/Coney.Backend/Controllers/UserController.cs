@@ -23,7 +23,7 @@ public class UsersController : ControllerBase
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         _context.Add(user);
         await _context.SaveChangesAsync();
-        var successResponse = new ApiResponse<User>(true, 200, user);
+        var successResponse = new ApiResponse<User>(true, 201, user);
         return Ok(successResponse);
     }
 

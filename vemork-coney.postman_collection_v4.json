@@ -138,7 +138,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"doy@gmail.com\",\r\n  \"firstName\": \"Doyler\",\r\n  \"lastName\": \"vasquez\",\r\n  \"password\": \"123456\"\r\n}",
+							"raw": "{\r\n  \"email\": \"derubio1@gmail.com\",\r\n  \"firstName\": \"Doyler\",\r\n  \"lastName\": \"Rubio\",\r\n  \"password\": \"123456\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -154,6 +154,51 @@
 								"api",
 								"Users",
 								"createUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sendEmail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Users/sendEmail/derubio1@gmail.com",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"sendEmail",
+								"derubio1@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verifyUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Users/verifyUser?userEmail=derubio@gmail.com",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"verifyUser"
+							],
+							"query": [
+								{
+									"key": "userEmail",
+									"value": "derubio@gmail.com"
+								}
 							]
 						}
 					},

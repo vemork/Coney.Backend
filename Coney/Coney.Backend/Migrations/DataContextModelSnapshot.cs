@@ -344,6 +344,12 @@ namespace Coney.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool?>("IsEmailValidated")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsUserAuthorized")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)

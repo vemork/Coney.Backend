@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coney.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240929174854_InitialMigrations")]
-    partial class InitialMigrations
+    [Migration("20241013143049_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -346,6 +346,12 @@ namespace Coney.Backend.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool?>("IsEmailValidated")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsUserAuthorized")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()

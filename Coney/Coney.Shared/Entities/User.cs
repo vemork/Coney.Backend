@@ -9,19 +9,22 @@ namespace Coney.Shared.Entities
         [Required]
         [MaxLength(50)]
         [EmailAddress]
-        public required string Email { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public required string FirstName { get; set; }
+        public string FirstName { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public required string LastName { get; set; }
+        public string LastName { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public required string Password { get; set; }
+        public string Password { get; set; }
+
+        public bool? IsEmailValidated { get; set; }
+        public bool? IsUserAuthorized { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;

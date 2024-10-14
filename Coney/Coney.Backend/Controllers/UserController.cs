@@ -1,7 +1,8 @@
-﻿using Coney.Shared.Entities;
-using Microsoft.AspNetCore.Mvc;
-using Coney.Backend.Repositories;
+﻿using Microsoft.AspNetCore.Mvc;
 using Coney.Backend.DTOs;
+using Coney.Backend.Services;
+using System.Runtime.InteropServices;
+using Coney.Backend.Repositories;
 
 namespace Coney.Backend.Controllers;
 
@@ -9,21 +10,29 @@ namespace Coney.Backend.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly UserRepository _userRepository;
+    private readonly UserService _userService;
 
-    public UsersController(UserRepository userRepository)
+    public UsersController(UserService userService)
     {
-        _userRepository = userRepository;
+        _userService = userService;
     }
 
     [HttpPost("createUser")]
-    public async Task<IActionResult> PostAsync(User user)
+    public async Task<IActionResult> PostAsync(UserRegistrationDto userRegistrationDto)
     {
         try
         {
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-            await _userRepository.AddAsync(user);
-            var successResponse = new ApiResponse<User>(true, 201, user);
+            var user = new UserRegistrationDto
+            {
+                Email = userRegistrationDto.Email,
+                FirstName = userRegistrationDto.FirstName,
+                LastName = userRegistrationDto.LastName,
+                Password = userRegistrationDto.Password = BCrypt.Net.BCrypt.HashPassword(userRegistrationDto.Password)
+            };
+
+            await _userService.AddUserAsync(user);
+
+            var successResponse = new ApiResponse<UserRegistrationDto>(true, 201, user);
             return Ok(successResponse);
         }
         catch (Exception ex)
@@ -33,10 +42,49 @@ public class UsersController : ControllerBase
         }
     }
 
+    [HttpGet("verifyUser")]
+    public async Task<IActionResult> Get([FromQuery] string userEmail)
+    {
+        try
+        {
+            var wasValitadionOK = await _userService.ValidateUserEmailAsync(userEmail);
+
+            if (!wasValitadionOK)
+            {
+                var notFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "User not found" });
+                return NotFound(notFoundResponse);
+            }
+            var verificationOk = new ApiResponse<List<object>>(true, 200, new List<object> { " Email verification was successful..." });
+            return Ok(verificationOk);
+        }
+        catch (Exception ex)
+        {
+            var internalException = new ApiResponse<List<object>>(false, 503, new List<object> { "Unexpected error verifying email..." });
+            return Conflict(internalException);
+        }
+    }
+
+    [HttpPost("sendEmail/{email}")]
+    public async Task<IActionResult> PostAsync(string email)
+    {
+        try
+        {
+            await _userService.SendEmailAsync(email);
+            var successResponse = new ApiResponse<string>(true, 201, "The confirmation mail has beeen sent successfully.");
+            return Ok(successResponse);
+        }
+        catch (Exception ex)
+        {
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error creating record..." });
+            return Conflict(sqlException);
+        }
+    }
+
+    /*
     [HttpGet("getAllUsers")]
     public async Task<IActionResult> GetAsync()
     {
-        var successResponse = new ApiResponse<IEnumerable<User>>(true, 200, await _userRepository.GetAllAsync());
+        var successResponse = new ApiResponse<IEnumerable<User>>(true, 200, await _userService.GetAllAsync());
         return Ok(successResponse);
     }
 
@@ -105,4 +153,5 @@ public class UsersController : ControllerBase
             return Conflict(sqlException);
         }
     }
+    */
 }

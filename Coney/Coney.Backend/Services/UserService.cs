@@ -1,26 +1,30 @@
 ﻿using Coney.Backend.DTOs;
 using Coney.Backend.Repositories;
+using Coney.Shared.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Coney.Backend.Services;
 
 public class UserService
 {
     private readonly UserRepository _userRepository;
+    private readonly EmailService _emailService;
     private readonly ILogger<UserService> _logger;
 
-    public UserService(UserRepository userRepository, ILogger<UserService> logger)
+    public UserService(UserRepository userRepository, ILogger<UserService> logger, EmailService emailService)
     {
         _userRepository = userRepository;
+        _emailService = emailService;
         _logger = logger;
     }
 
     // This method retrieves the information of all users in the database
-    public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
+    public async Task<IEnumerable<User>> GetAllUsersAsync()
     {
         try
         {
             var users = await _userRepository.GetAllAsync();
-            return users.Select(user => new UserDto
+            return users.Select(user => new User
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -37,7 +41,7 @@ public class UserService
     }
 
     // This method retrieves the user from the database using the provided ID.
-    public async Task<UserDto> GetUserByIdAsync(int id)
+    public async Task<User> GetUserByIdAsync(int id)
     {
         try
         {
@@ -47,7 +51,7 @@ public class UserService
                 throw new KeyNotFoundException("user not found.");
             }
 
-            return new UserDto
+            return new User
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -61,6 +65,84 @@ public class UserService
             _logger.LogError(ex, $"Error getting user with ID {id}");
             throw new ApplicationException($"An error occurred while getting the user with ID {id}.");
         }
+    }
+
+    public async Task<UserRegistrationDto> AddUserAsync(UserRegistrationDto UserRegDto)
+    {
+        try
+        {
+            var existingUser = await _userRepository.GetByEmailAsync(UserRegDto.Email);
+            if (existingUser != null)
+            {
+                throw new InvalidOperationException("The email is already in use.");
+            }
+
+            var user = new User
+            {
+                FirstName = UserRegDto.FirstName,
+                LastName = UserRegDto.LastName,
+                Email = UserRegDto.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(UserRegDto.Password),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+
+            await _userRepository.AddAsync(user);
+            _ = Task.Run(async () =>
+            {
+                await _emailService.SendEmailAsync(UserRegDto.Email);
+            });
+
+            return new UserRegistrationDto
+            {
+                Email = UserRegDto.Email,
+                FirstName = UserRegDto.FirstName,
+                LastName = UserRegDto.LastName
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating a new user");
+            throw new ApplicationException("An error occurred while creating the user.");
+        }
+    }
+
+    public async Task<bool> ValidateUserEmailAsync(string userEmail)
+    {
+        try
+        {
+            var curentUser = await _userRepository.GetByEmailAsync(userEmail);
+            if (curentUser == null)
+            {
+                throw new InvalidOperationException("The email is not already in use.");
+            }
+
+            curentUser.IsEmailValidated = true;
+            curentUser.UpdatedAt = DateTime.Now;
+
+            await _userRepository.UpdateAsync(curentUser);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error trying to validate user email");
+            throw new ApplicationException("\"An error occurred while attempting to find a user....");
+        }
+    }
+
+    public async Task<bool> SendEmailAsync(string userEmail)
+    {
+        var existingUser = await _userRepository.GetByEmailAsync(userEmail);
+        if (existingUser == null)
+        {
+            throw new InvalidOperationException("The email is not already in use.");
+        }
+
+        _ = Task.Run(async () =>
+        {
+            await _emailService.SendEmailAsync(userEmail);
+        });
+        return true;
     }
 
     // This method is responsible for creating the instance and and registration of the entity

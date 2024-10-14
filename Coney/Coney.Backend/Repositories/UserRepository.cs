@@ -1,5 +1,6 @@
 ﻿using Coney.Backend.Data;
 using Coney.Shared.Entities;
+using Coney.Backend.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Coney.Backend.Repositories;

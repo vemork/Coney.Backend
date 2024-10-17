@@ -27,12 +27,12 @@ public class UsersController : ControllerBase
                 Email = userRegistrationDto.Email,
                 FirstName = userRegistrationDto.FirstName,
                 LastName = userRegistrationDto.LastName,
-                Password = userRegistrationDto.Password = BCrypt.Net.BCrypt.HashPassword(userRegistrationDto.Password)
+                Password = userRegistrationDto.Password
             };
 
-            await _userService.AddUserAsync(user);
+            var recordedUser = await _userService.AddUserAsync(user);
 
-            var successResponse = new ApiResponse<UserRegistrationDto>(true, 201, user);
+            var successResponse = new ApiResponse<UserRegistrationDto>(true, 201, recordedUser);
             return Ok(successResponse);
         }
         catch (Exception ex)

@@ -20,11 +20,12 @@ namespace Coney.Shared.Entities
         public string LastName { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [MaxLength(255)]
         public string Password { get; set; }
 
         public bool? IsEmailValidated { get; set; }
         public bool? IsUserAuthorized { get; set; }
+        public string? Role { get; set; } = "anonymous";
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;

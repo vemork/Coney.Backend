@@ -18,6 +18,32 @@ public class UserService
         _logger = logger;
     }
 
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        try
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("user not found.");
+            }
+            return new User
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Password = user.Password,
+                Role = user.Role
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting user");
+            throw new ApplicationException("An error occurred while getting user info.");
+        }
+    }
+
     // This method retrieves the information of all users in the database
     public async Task<IEnumerable<User>> GetAllUsersAsync()
     {
@@ -97,7 +123,8 @@ public class UserService
             {
                 Email = UserRegDto.Email,
                 FirstName = UserRegDto.FirstName,
-                LastName = UserRegDto.LastName
+                LastName = UserRegDto.LastName,
+                Password = UserRegDto.Password
             };
         }
         catch (Exception ex)

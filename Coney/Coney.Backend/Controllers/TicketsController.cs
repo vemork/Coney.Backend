@@ -24,7 +24,7 @@ public class TicketsController : ControllerBase
             var successResponse = new ApiResponse<Ticket>(true, 201, ticket);
             return Ok(successResponse);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error creating record..." });
             return Conflict(sqlException);
@@ -35,6 +35,14 @@ public class TicketsController : ControllerBase
     public async Task<IActionResult> GetAsync()
     {
         var successResponse = new ApiResponse<IEnumerable<Ticket>>(true, 200, await _ticketRepository.GetAllAsync());
+        return Ok(successResponse);
+    }
+
+    [HttpGet("getAllTicketsForReservation")]
+    public async Task<IActionResult> getAsyncForReservation()
+    {
+        var successResponse = new ApiResponse<IEnumerable<Ticket>>
+            (true, 200, await _ticketRepository.getAsyncForReservation());
         return Ok(successResponse);
     }
 

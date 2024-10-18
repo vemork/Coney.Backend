@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "1aed2cad-e6ba-421b-b503-e428f8539487",
+		"_postman_id": "f4c04a85-3351-4bf5-b731-b096d9381e1f",
 		"name": "vemork/coney",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "6804902",
-		"_collection_link": "https://martian-desert-490605.postman.co/workspace/CONEY~68025535-7ed4-418b-871f-cfb190e09ac1/collection/6804902-1aed2cad-e6ba-421b-b503-e428f8539487?action=share&source=collection_link&creator=6804902"
+		"_exporter_id": "10141207"
 	},
 	"item": [
 		{
@@ -470,7 +469,7 @@
 			"name": "TICKET",
 			"item": [
 				{
-					"name": "POST CREATE TICKET",
+					"name": "createTicket",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -498,7 +497,7 @@
 					"response": []
 				},
 				{
-					"name": "GET ALL TICKETS",
+					"name": "getAllTickets",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -517,7 +516,26 @@
 					"response": []
 				},
 				{
-					"name": "GET TICKET BY ID",
+					"name": "getAllTicketsForReservation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/Tickets/getAllTickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"Tickets",
+								"getAllTickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getTicketByID",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -537,7 +555,7 @@
 					"response": []
 				},
 				{
-					"name": "UPDATE TICKET",
+					"name": "updateTicket",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -566,7 +584,7 @@
 					"response": []
 				},
 				{
-					"name": "DELETE TICKET",
+					"name": "deleteTicket",
 					"request": {
 						"method": "DELETE",
 						"header": [],

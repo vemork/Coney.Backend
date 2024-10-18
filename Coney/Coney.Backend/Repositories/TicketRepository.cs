@@ -13,7 +13,7 @@ public class TicketRepository
         _context = context;
     }
 
-    // returns all the information from the users
+    // returns all the information from the tickets
     public async Task<IEnumerable<Ticket>> GetAllAsync()
     {
         return await _context.Tickets.ToListAsync();
@@ -58,6 +58,14 @@ public class TicketRepository
     {
         await _context.Tickets.AddRangeAsync(tickets);
         await _context.SaveChangesAsync();
+    }
+
+    // returns all the information of the tickets that have not been reserved
+    public async Task<IEnumerable<Ticket>> getAsyncForReservation()
+    {
+        return await _context.Tickets
+        .Where(ticket => ticket.UserId == null)
+        .ToListAsync();
     }
 
 }

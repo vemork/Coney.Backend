@@ -20,38 +20,11 @@ public class AuthsController : ControllerBase
 {
     private readonly AuthService _authService;
     private readonly UserService _userService;
-    private readonly JwtSettings _jwtSettings;
 
-    public AuthsController(AuthService authService, UserService userService, IOptions<JwtSettings> jwtSettings)
+    public AuthsController(AuthService authService, UserService userService)
     {
         _authService = authService;
         _userService = userService;
-        _jwtSettings = jwtSettings.Value;
-    }
-
-    private string GenerateJwtToken(User user)
-    {
-        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
-        var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-
-        var claims = new[]
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, "1234567890"),
-            new Claim("id", user.Id.ToString()),
-            new Claim("firstName", user.FirstName),
-            new Claim("lastName", user.LastName),
-            new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim("role", user.Role)
-        };
-
-        var tokenOptions = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(double.Parse(_jwtSettings.ExpiresInMinutes)),
-            signingCredentials: signinCredentials
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
     }
 
     [HttpPost("login")]
@@ -67,9 +40,18 @@ public class AuthsController : ControllerBase
                 return Unauthorized(unauthorizeResponse);
             }
 
-            var token = GenerateJwtToken(user);
-
-            var authorizeResponse = new ApiResponse<object>(true, 200, new { token });
+            var token = _authService.GenerateJwtToken(user);
+            var tokenizedUser = new UserResponseDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Role = user.Role,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt = user.UpdatedAt
+            };
+            var authorizeResponse = new ApiResponse<object>(true, 200, new { user = tokenizedUser, token });
             return Ok(authorizeResponse);
         }
         catch (Exception ex)

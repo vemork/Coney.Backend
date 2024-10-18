@@ -34,7 +34,9 @@ public class UserService
                 LastName = user.LastName,
                 Email = user.Email,
                 Password = user.Password,
-                Role = user.Role
+                Role = user.Role,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt = user.UpdatedAt,
             };
         }
         catch (Exception ex)
@@ -124,7 +126,7 @@ public class UserService
                 Email = UserRegDto.Email,
                 FirstName = UserRegDto.FirstName,
                 LastName = UserRegDto.LastName,
-                Password = UserRegDto.Password
+                Password = UserRegDto.Password,
             };
         }
         catch (Exception ex)

@@ -9,10 +9,15 @@ namespace Coney.Backend.Controllers;
 public class RifflesController : ControllerBase
 {
     private readonly RiffleRepository _riffleRepository;
+    private readonly TicketRepository _ticketRepository;
 
-    public RifflesController(RiffleRepository riffleRepository)
+    public RifflesController(
+        RiffleRepository riffleRepository,
+        TicketRepository ticketRepository
+    )
     {
-        _riffleRepository = riffleRepository; ;
+        _riffleRepository = riffleRepository;
+        _ticketRepository = ticketRepository;
     }
 
     [HttpPost("createRiffle")]
@@ -21,10 +26,26 @@ public class RifflesController : ControllerBase
         try
         {
             await _riffleRepository.AddAsync(riffle);
+
+            // Generate a list of 100 consecutive tickets for the created raffle
+            var tickets = new List<Ticket>();
+            for (int i = 1; i <= 100; i++)
+            {
+                tickets.Add(new Ticket
+                {
+                    TicketNumber = i.ToString(),
+                    RiffleId = riffle.Id, 
+                    UserId = null
+                });
+            }
+
+            // 100 tickets are inserted for each raffle
+            await _ticketRepository.AddMultipleTicketsAsync(tickets);
+
             var successResponse = new ApiResponse<Riffle>(true, 201, riffle);
             return Ok(successResponse);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error creating record..." });
             return Conflict(sqlException);

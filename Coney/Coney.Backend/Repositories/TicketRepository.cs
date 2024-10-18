@@ -52,4 +52,12 @@ public class TicketRepository
     {
         return await _context.Tickets.FindAsync(id);
     }
+
+    // multiple data insertion
+    public async Task AddMultipleTicketsAsync(IEnumerable<Ticket> tickets)
+    {
+        await _context.Tickets.AddRangeAsync(tickets);
+        await _context.SaveChangesAsync();
+    }
+
 }

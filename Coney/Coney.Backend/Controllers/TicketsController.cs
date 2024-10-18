@@ -38,11 +38,14 @@ public class TicketsController : ControllerBase
         return Ok(successResponse);
     }
 
-    [HttpGet("getAllTicketsForReservation")]
-    public async Task<IActionResult> getAsyncForReservation()
+    [HttpGet("getAllTicketsForReservation/{idRiffle}")]
+    public async Task<IActionResult> GetAsyncForReservation(int idRiffle)
     {
-        var successResponse = new ApiResponse<IEnumerable<Ticket>>
-            (true, 200, await _ticketRepository.getAsyncForReservation());
+        var successResponse = new ApiResponse<IEnumerable<Ticket>>(
+            true, 
+            200, 
+            await _ticketRepository.GetAsyncForReservation(idRiffle)
+        );
         return Ok(successResponse);
     }
 

@@ -61,10 +61,12 @@ public class TicketRepository
     }
 
     // returns all the information of the tickets that have not been reserved
-    public async Task<IEnumerable<Ticket>> getAsyncForReservation()
+    public async Task<IEnumerable<Ticket>> GetAsyncForReservation(int idRiffle)
     {
         return await _context.Tickets
-        .Where(ticket => ticket.UserId == null)
+        .Where(
+            ticket => ticket.UserId == null && 
+            ticket.RiffleId == idRiffle)  
         .ToListAsync();
     }
 

@@ -521,14 +521,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/Tickets/getAllTickets",
+							"raw": "{{url}}/api/Tickets/getAllTicketsForReservation/2",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"api",
 								"Tickets",
-								"getAllTickets"
+								"getAllTicketsForReservation",
+								"2"
 							]
 						}
 					},

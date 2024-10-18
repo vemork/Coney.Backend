@@ -24,12 +24,14 @@ public class UserXRifflesController : ControllerBase
         var successResponse = new ApiResponse<UserXRiffle>(true, 200, userXriffle);
         return Ok(successResponse);
     }
+
     [HttpGet("getAllUserXRiffles")]
     public async Task<IActionResult> GetAsync()
     {
         var successResponse = new ApiResponse<List<UserXRiffle>>(true, 200, await _context.UserXRiffles.ToListAsync());
         return Ok(successResponse);
     }
+
     [HttpGet("getUserXRiffle/{id}")]
     public async Task<IActionResult> GetAsync(int id)
     {
@@ -42,6 +44,7 @@ public class UserXRifflesController : ControllerBase
         var successResponse = new ApiResponse<UserXRiffle>(true, 200, userXriffle);
         return Ok(successResponse);
     }
+
     [HttpPut("updateUserXRiffle")]
     public async Task<IActionResult> PutAsync(UserXRiffle userXriffle)
     {

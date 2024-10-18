@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Coney.Backend.DTOs;
+﻿using Coney.Backend.DTOs;
 using Coney.Backend.Services;
-using System.Runtime.InteropServices;
-using Coney.Backend.Repositories;
+using Coney.Shared.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Coney.Backend.Controllers;
 
@@ -59,7 +58,7 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            var internalException = new ApiResponse<List<object>>(false, 503, new List<object> { "Unexpected error verifying email..." });
+            var internalException = new ApiResponse<List<object>>(false, 503, new List<object> { "Unexpected error verifying user email..." });
             return Conflict(internalException);
         }
     }
@@ -75,55 +74,63 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error creating record..." });
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error sending email verification ..." });
             return Conflict(sqlException);
         }
     }
 
-    /*
+    [HttpPost("adminVerification/{email}")]
+    public async Task<IActionResult> PostAdminVerification(string email)
+    {
+        try
+        {
+            var data = await _userService.UpdateUserAdminVerificationAsync(email);
+
+            var successResponse = new ApiResponse<object>(true, 201, new List<object?> { data });
+            return Ok(successResponse);
+        }
+        catch (Exception ex)
+        {
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error when admin try to verify a user email record ..." });
+            return Conflict(sqlException);
+        }
+    }
+
     [HttpGet("getAllUsers")]
     public async Task<IActionResult> GetAsync()
     {
-        var successResponse = new ApiResponse<IEnumerable<User>>(true, 200, await _userService.GetAllAsync());
+        var successResponse = new ApiResponse<IEnumerable<User>>(true, 200, await _userService.GetAllUsersAsync());
         return Ok(successResponse);
     }
 
     [HttpGet("getUser/{id}")]
     public async Task<IActionResult> GetAsync(int id)
     {
-        var user = await _userRepository.GetByIdAsync(id);
-        if (user == null)
+        try
         {
-            var NotFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "User not found" });
-            return Ok(NotFoundResponse);
+            var user = await _userService.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                var NotFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "User not found" });
+                return Ok(NotFoundResponse);
+            }
+            var successResponse = new ApiResponse<List<User>>(true, 200, new List<User> { user });
+            return Ok(successResponse);
         }
-        var successResponse = new ApiResponse<User>(true, 200, user);
-        return Ok(successResponse);
+        catch (Exception ex)
+        {
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error trying to get user ..." + ex });
+            return Conflict(sqlException);
+        }
     }
 
     [HttpPut("updateUser/{id}")]
-    public async Task<IActionResult> PutAsync(int id, UpdateUserDto userDto)
+    public async Task<IActionResult> PutAsync(int id, UserUpdateDto userDto)
     {
         try
         {
-            var currentUser = await _userRepository.FindUserAsync(id);
-            if (currentUser == null)
-            {
-                var notFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "User not found" });
-                return NotFound(notFoundResponse);
-            }
-
-            if (!string.IsNullOrEmpty(userDto.Password))
-            {
-                currentUser.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
-            }
-
-            currentUser.FirstName = userDto.FirstName ?? currentUser.FirstName;
-            currentUser.LastName = userDto.LastName ?? currentUser.LastName;
-            currentUser.UpdatedAt = DateTime.Now;
-
-            await _userRepository.UpdateAsync(currentUser);
-            var successResponse = new ApiResponse<List<User>>(true, 200, new List<User> { currentUser });
+            var userResponse = await _userService.UpdateUserAsync(id, userDto);
+            var successResponse = new ApiResponse<List<UserResponseDto>>(true, 200, new List<UserResponseDto> { userResponse });
             return Ok(successResponse);
         }
         catch (Exception ex)
@@ -137,13 +144,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            var user = await _userRepository.FindUserAsync(id);
-            if (user == null)
-            {
-                var NotFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "User not found" });
-                return Ok(NotFoundResponse);
-            }
-            await _userRepository.DeleteAsync(user);
+            await _userService.DeleteUserAsync(id);
             var successResponse = new ApiResponse<List<User>>(true, 200, []);
             return Ok(successResponse);
         }
@@ -153,5 +154,4 @@ public class UsersController : ControllerBase
             return Conflict(sqlException);
         }
     }
-    */
 }

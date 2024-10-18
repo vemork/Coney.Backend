@@ -1,7 +1,6 @@
 ﻿using Coney.Backend.DTOs;
 using Coney.Backend.Repositories;
 using Coney.Shared.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Coney.Backend.Services;
 
@@ -35,6 +34,7 @@ public class UserService
                 Email = user.Email,
                 Password = user.Password,
                 Role = user.Role,
+                IsEmailValidated = user.IsEmailValidated,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
             };
@@ -79,6 +79,31 @@ public class UserService
                 throw new KeyNotFoundException("user not found.");
             }
 
+            return new User
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                CreatedAt = user.CreatedAt
+            };
+        }
+        catch (Exception ex) when (!(ex is KeyNotFoundException))
+        {
+            _logger.LogError(ex, $"Error getting user with ID {id}");
+            throw new ApplicationException($"An error occurred while getting the user with ID {id}.");
+        }
+    }
+
+    public async Task<User> FindUserAsync(int id)
+    {
+        try
+        {
+            var user = await _userRepository.FindUserAsync(id);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("user not found.");
+            }
             return new User
             {
                 Id = user.Id,
@@ -174,51 +199,7 @@ public class UserService
         return true;
     }
 
-    // This method is responsible for creating the instance and and registration of the entity
-    // with all the information necessary to register a user.
-    /*public async Task<UserDto> AddUserAsync(CreateUserDto userDto)
-    {
-        try
-        {
-            // It is verified that the email is unique in the system.
-            var existingUser = await _userRepository.GetByEmailAsync(userDto.Email);
-            if (existingUser != null)
-            {
-                throw new InvalidOperationException("The email is already in use.");
-            }
-
-            // Create the User entity based on the DTO
-            var user = new User
-            {
-                FirstName = userDto.FirstName,
-                LastName = userDto.LastName,
-                Email = userDto.Email,
-                Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
-
-            await _userRepository.AddAsync(user);
-
-            return new UserDto
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                CreatedAt = user.CreatedAt
-            };
-        }
-        catch (Exception ex) when (!(ex is InvalidOperationException))
-        {
-            _logger.LogError(ex, "Error creating a new user");
-            throw new ApplicationException("An error occurred while creating the user.");
-        }
-    }
-
-    // This method is responsible updating information
-    // in the DB for the sent user
-    public async Task<UserDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto)
+    public async Task<UserResponseDto> UpdateUserAsync(int id, UserUpdateDto updateUserDto)
     {
         try
         {
@@ -232,6 +213,7 @@ public class UserService
             // Updates only the provided fields
             user.FirstName = updateUserDto.FirstName ?? user.FirstName;
             user.LastName = updateUserDto.LastName ?? user.LastName;
+
             if (!string.IsNullOrEmpty(updateUserDto.Password))
             {
                 user.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDto.Password);
@@ -240,7 +222,7 @@ public class UserService
 
             await _userRepository.UpdateAsync(user);
 
-            return new UserDto
+            return new UserResponseDto
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -256,17 +238,50 @@ public class UserService
         }
     }
 
-    // This method is responsible for removing users from the entity.
+    public async Task<User> UpdateUserAdminVerificationAsync(string email)
+    {
+        try
+        {
+            User? existingUser = await _userRepository.GetByEmailAsync(email);
+            if (existingUser == null)
+            {
+                throw new InvalidOperationException("The email is not already in use.");
+            }
+
+            if (existingUser.IsEmailValidated == true)
+            {
+                existingUser.IsUserAuthorized = true;
+                existingUser.Role = "user";
+                await _userRepository.UpdateAsync(existingUser);
+                return existingUser;
+            }
+            else
+            {
+                throw new InvalidOperationException("The email is not already verificated by the user.");
+            }
+        }
+        catch (Exception ex) when (!(ex is KeyNotFoundException))
+        {
+            _logger.LogError(ex, $"Error updating user with ID {email}");
+            throw new ApplicationException($"An error occurred while updating user with ID {email}.");
+        }
+    }
+
     public async Task DeleteUserAsync(int id)
     {
         try
         {
-            await _userRepository.DeleteAsync(id);
+            var user = await _userRepository.FindUserAsync(id);
+            if (user == null)
+            {
+                throw new InvalidOperationException("The user not Found.");
+            }
+            await _userRepository.DeleteAsync(user);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Error deleting user with ID {id}");
             throw new ApplicationException($"An error occurred while deleting the user with ID {id}.");
         }
-    }*/
+    }
 }

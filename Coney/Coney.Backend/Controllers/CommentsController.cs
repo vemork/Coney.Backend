@@ -31,6 +31,7 @@ public class CommentsController : ControllerBase
         var successResponse = new ApiResponse<List<Comment>>(true, 200, await _context.Comments.ToListAsync());
         return Ok(successResponse);
     }
+
     [HttpGet("getComment/{id}")]
     public async Task<IActionResult> GetAsync(int id)
     {
@@ -43,6 +44,7 @@ public class CommentsController : ControllerBase
         var successResponse = new ApiResponse<Comment>(true, 200, comment);
         return Ok(successResponse);
     }
+
     [HttpPut("updateComment")]
     public async Task<IActionResult> PutAsync(Comment comment)
     {
@@ -60,7 +62,7 @@ public class CommentsController : ControllerBase
         var successResponse = new ApiResponse<List<Comment>>(true, 200, []);
         return Ok(successResponse);
     }
- 
+
     [HttpDelete("deleteComment/{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {

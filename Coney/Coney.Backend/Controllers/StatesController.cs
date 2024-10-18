@@ -62,8 +62,6 @@ public class StatesController : ControllerBase
         return Ok(successResponse);
     }
 
-    
-
     [HttpDelete("deleteState/{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {

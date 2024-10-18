@@ -1,5 +1,5 @@
-﻿using MimeKit;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using MimeKit;
 
 namespace Coney.Backend.Services
 {

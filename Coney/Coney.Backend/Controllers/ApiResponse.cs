@@ -1,4 +1,6 @@
-﻿namespace Coney.Backend.Controllers;
+﻿using Coney.Shared.Entities;
+
+namespace Coney.Backend.Controllers;
 
 public class ApiResponse<T>
 {
@@ -11,5 +13,9 @@ public class ApiResponse<T>
         Status = status;
         Code = code;
         Data = data;
+    }
+
+    public ApiResponse(bool v1, int v2, User? data)
+    {
     }
 }

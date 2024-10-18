@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Coney.Backend.DTOs
+﻿namespace Coney.Backend.DTOs
 {
     public class UserResponseDto
     {

@@ -31,7 +31,7 @@ namespace Coney.Shared.Entities
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         [MaxLength(255)]
-        public string Token { get; set; }
+        public string? Token { get; set; }
         public DateTime? TokenExp { get; set; }
     }
 }

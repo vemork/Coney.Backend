@@ -144,7 +144,7 @@ public class UserService
                 Password = BCrypt.Net.BCrypt.HashPassword(UserRegDto.Password),
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
-                Role = "user"
+                Role = "anonymous"
             };
 
             await _userRepository.AddAsync(user);
@@ -294,6 +294,28 @@ public class UserService
         {
             _logger.LogError(ex, $"Error deleting user with ID {id}");
             throw new ApplicationException($"An error occurred while deleting the user with ID {id}.");
+        }
+    }
+
+    public async Task changeUserPasswordService(ChangePasswordDto changePasswordDto)
+    {
+        try
+        {
+            var user = await _userRepository.GetByEmailAsync(changePasswordDto.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(changePasswordDto.CurrentPassword, user.Password))
+            {
+                throw new InvalidOperationException("The user has been rejected.");
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
+            user.UpdatedAt = DateTime.Now;
+            
+            await _userRepository.UpdateAsync(user);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error updating user password  with EMAIL {changePasswordDto.Email}");
+            throw new ApplicationException($"An error occurred while updating the user password with EMAIL {changePasswordDto.Email}.");
         }
     }
 }

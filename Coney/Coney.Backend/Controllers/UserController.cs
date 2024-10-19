@@ -154,4 +154,20 @@ public class UsersController : ControllerBase
             return Conflict(sqlException);
         }
     }
+
+    [HttpPost("changeUserPassword")]
+    public async Task<IActionResult> changeUserPasswordAsync(ChangePasswordDto changePasswordDto)
+    {
+        try
+        {
+            await _userService.changeUserPasswordService(changePasswordDto);
+            var successResponse = new ApiResponse<List<object>>(true, 201, new List<object> { "The password has been changed." });
+            return Ok(successResponse);
+        }
+        catch (Exception ex)
+        {
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error processing user information ..." });
+            return Conflict(sqlException);
+        }
+    }
 }

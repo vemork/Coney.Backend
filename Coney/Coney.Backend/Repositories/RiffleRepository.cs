@@ -43,6 +43,7 @@ public class RiffleRepository
     // Delete the information of a single riffle using the id
     public async Task DeleteAsync(Riffle riffle)
     {
+        await _context.SaveChangesAsync();
         _context.Riffles.Remove(riffle);
         await _context.SaveChangesAsync();
     }

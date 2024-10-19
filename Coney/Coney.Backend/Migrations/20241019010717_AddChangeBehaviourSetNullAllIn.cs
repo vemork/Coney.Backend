@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Coney.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class AddChangeBehaviourSetNullAllIn : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -96,9 +97,10 @@ namespace Coney.Backend.Migrations
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     IsEmailValidated = table.Column<bool>(type: "bit", nullable: true),
                     IsUserAuthorized = table.Column<bool>(type: "bit", nullable: true),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -114,7 +116,7 @@ namespace Coney.Backend.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false)
+                    CountryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -124,7 +126,7 @@ namespace Coney.Backend.Migrations
                         column: x => x.CountryId,
                         principalTable: "Countries",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -133,8 +135,8 @@ namespace Coney.Backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RiffleId = table.Column<int>(type: "int", nullable: false),
-                    RuleId = table.Column<int>(type: "int", nullable: false)
+                    RiffleId = table.Column<int>(type: "int", nullable: true),
+                    RuleId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -144,13 +146,13 @@ namespace Coney.Backend.Migrations
                         column: x => x.RiffleId,
                         principalTable: "Riffles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_RiffleXRules_Rules_RuleId",
                         column: x => x.RuleId,
                         principalTable: "Rules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,8 +163,8 @@ namespace Coney.Backend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Observations = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     DateComment = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RiffleId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    RiffleId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -172,13 +174,13 @@ namespace Coney.Backend.Migrations
                         column: x => x.RiffleId,
                         principalTable: "Riffles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Comments_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -192,7 +194,7 @@ namespace Coney.Backend.Migrations
                     PersonInCharge = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ResolvedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -202,7 +204,7 @@ namespace Coney.Backend.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -212,8 +214,8 @@ namespace Coney.Backend.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TicketNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RiffleId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    RiffleId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -223,13 +225,13 @@ namespace Coney.Backend.Migrations
                         column: x => x.RiffleId,
                         principalTable: "Riffles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Tickets_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -238,8 +240,8 @@ namespace Coney.Backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RiffleId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RiffleId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -250,13 +252,13 @@ namespace Coney.Backend.Migrations
                         column: x => x.RiffleId,
                         principalTable: "Riffles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_UserXRiffles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -267,9 +269,9 @@ namespace Coney.Backend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Observations = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     WasDelivered = table.Column<bool>(type: "bit", nullable: false),
-                    PrizeId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RiffleId = table.Column<int>(type: "int", nullable: false)
+                    PrizeId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    RiffleId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -279,19 +281,19 @@ namespace Coney.Backend.Migrations
                         column: x => x.PrizeId,
                         principalTable: "Prices",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Winners_Riffles_RiffleId",
                         column: x => x.RiffleId,
                         principalTable: "Riffles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Winners_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -301,7 +303,7 @@ namespace Coney.Backend.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    StateId = table.Column<int>(type: "int", nullable: false)
+                    StateId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -311,14 +313,15 @@ namespace Coney.Backend.Migrations
                         column: x => x.StateId,
                         principalTable: "States",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_StateId_Name",
                 table: "Cities",
                 columns: new[] { "StateId", "Name" },
-                unique: true);
+                unique: true,
+                filter: "[StateId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_RiffleId",
@@ -340,7 +343,8 @@ namespace Coney.Backend.Migrations
                 name: "IX_RiffleXRules_RiffleId_RuleId",
                 table: "RiffleXRules",
                 columns: new[] { "RiffleId", "RuleId" },
-                unique: true);
+                unique: true,
+                filter: "[RiffleId] IS NOT NULL AND [RuleId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RiffleXRules_RuleId",
@@ -351,7 +355,8 @@ namespace Coney.Backend.Migrations
                 name: "IX_States_CountryId_Name",
                 table: "States",
                 columns: new[] { "CountryId", "Name" },
-                unique: true);
+                unique: true,
+                filter: "[CountryId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Supports_UserId",
@@ -362,7 +367,8 @@ namespace Coney.Backend.Migrations
                 name: "IX_Tickets_RiffleId_UserId_TicketNumber",
                 table: "Tickets",
                 columns: new[] { "RiffleId", "UserId", "TicketNumber" },
-                unique: true);
+                unique: true,
+                filter: "[RiffleId] IS NOT NULL AND [UserId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_UserId",
@@ -379,7 +385,8 @@ namespace Coney.Backend.Migrations
                 name: "IX_UserXRiffles_RiffleId_UserId",
                 table: "UserXRiffles",
                 columns: new[] { "RiffleId", "UserId" },
-                unique: true);
+                unique: true,
+                filter: "[RiffleId] IS NOT NULL AND [UserId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserXRiffles_UserId",
@@ -390,7 +397,8 @@ namespace Coney.Backend.Migrations
                 name: "IX_Winners_PrizeId_UserId_RiffleId",
                 table: "Winners",
                 columns: new[] { "PrizeId", "UserId", "RiffleId" },
-                unique: true);
+                unique: true,
+                filter: "[PrizeId] IS NOT NULL AND [UserId] IS NOT NULL AND [RiffleId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Winners_RiffleId",

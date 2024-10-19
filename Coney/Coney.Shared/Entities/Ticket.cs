@@ -6,13 +6,11 @@ public class Ticket
 {
     public int Id { get; set; }
 
-    [Required]
     public string TicketNumber { get; set; } = null!;
 
     public Riffle? Riffle { get; set; }
 
-    [Required]
-    public int RiffleId { get; set; }
+    public int? RiffleId { get; set; }
 
     public User? User { get; set; }
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Coney.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241017040410_AddRoleProp")]
-    partial class AddRoleProp
+    [Migration("20241019010717_AddChangeBehaviourSetNullAllIn")]
+    partial class AddChangeBehaviourSetNullAllIn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,13 +38,14 @@ namespace Coney.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("StateId")
+                    b.Property<int?>("StateId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StateId", "Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[StateId] IS NOT NULL");
 
                     b.ToTable("Cities");
                 });
@@ -65,10 +66,10 @@ namespace Coney.Backend.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("RiffleId")
+                    b.Property<int?>("RiffleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -195,10 +196,10 @@ namespace Coney.Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("RiffleId")
+                    b.Property<int?>("RiffleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RuleId")
+                    b.Property<int?>("RuleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -206,7 +207,8 @@ namespace Coney.Backend.Migrations
                     b.HasIndex("RuleId");
 
                     b.HasIndex("RiffleId", "RuleId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[RiffleId] IS NOT NULL AND [RuleId] IS NOT NULL");
 
                     b.ToTable("RiffleXRules");
                 });
@@ -246,7 +248,7 @@ namespace Coney.Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CountryId")
+                    b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -257,7 +259,8 @@ namespace Coney.Backend.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId", "Name")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[CountryId] IS NOT NULL");
 
                     b.ToTable("States");
                 });
@@ -288,7 +291,7 @@ namespace Coney.Backend.Migrations
                     b.Property<DateTime?>("ResolvedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -306,14 +309,14 @@ namespace Coney.Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("RiffleId")
+                    b.Property<int?>("RiffleId")
                         .HasColumnType("int");
 
                     b.Property<string>("TicketNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -321,7 +324,8 @@ namespace Coney.Backend.Migrations
                     b.HasIndex("UserId");
 
                     b.HasIndex("RiffleId", "UserId", "TicketNumber")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[RiffleId] IS NOT NULL AND [UserId] IS NOT NULL");
 
                     b.ToTable("Tickets");
                 });
@@ -360,14 +364,14 @@ namespace Coney.Backend.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("role")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -388,10 +392,10 @@ namespace Coney.Backend.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RiffleId")
+                    b.Property<int?>("RiffleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -399,7 +403,8 @@ namespace Coney.Backend.Migrations
                     b.HasIndex("UserId");
 
                     b.HasIndex("RiffleId", "UserId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[RiffleId] IS NOT NULL AND [UserId] IS NOT NULL");
 
                     b.ToTable("UserXRiffles");
                 });
@@ -417,13 +422,13 @@ namespace Coney.Backend.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("PrizeId")
+                    b.Property<int?>("PrizeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RiffleId")
+                    b.Property<int?>("RiffleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.Property<bool>("WasDelivered")
@@ -436,7 +441,8 @@ namespace Coney.Backend.Migrations
                     b.HasIndex("UserId");
 
                     b.HasIndex("PrizeId", "UserId", "RiffleId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[PrizeId] IS NOT NULL AND [UserId] IS NOT NULL AND [RiffleId] IS NOT NULL");
 
                     b.ToTable("Winners");
                 });
@@ -446,8 +452,7 @@ namespace Coney.Backend.Migrations
                     b.HasOne("Coney.Shared.Entities.State", "State")
                         .WithMany()
                         .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("State");
                 });
@@ -457,14 +462,12 @@ namespace Coney.Backend.Migrations
                     b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
                         .WithMany()
                         .HasForeignKey("RiffleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Coney.Shared.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Riffle");
 
@@ -476,14 +479,12 @@ namespace Coney.Backend.Migrations
                     b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
                         .WithMany()
                         .HasForeignKey("RiffleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Coney.Shared.Entities.Rule", "Rule")
                         .WithMany()
                         .HasForeignKey("RuleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Riffle");
 
@@ -495,8 +496,7 @@ namespace Coney.Backend.Migrations
                     b.HasOne("Coney.Shared.Entities.Country", "Country")
                         .WithMany("States")
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Country");
                 });
@@ -506,8 +506,7 @@ namespace Coney.Backend.Migrations
                     b.HasOne("Coney.Shared.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("User");
                 });
@@ -515,16 +514,14 @@ namespace Coney.Backend.Migrations
             modelBuilder.Entity("Coney.Shared.Entities.Ticket", b =>
                 {
                     b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
-                        .WithMany()
+                        .WithMany("Tickets")
                         .HasForeignKey("RiffleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Coney.Shared.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Riffle");
 
@@ -536,14 +533,12 @@ namespace Coney.Backend.Migrations
                     b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
                         .WithMany()
                         .HasForeignKey("RiffleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Coney.Shared.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Riffle");
 
@@ -555,20 +550,17 @@ namespace Coney.Backend.Migrations
                     b.HasOne("Coney.Shared.Entities.Prize", "Prize")
                         .WithMany()
                         .HasForeignKey("PrizeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Coney.Shared.Entities.Riffle", "Riffle")
                         .WithMany()
                         .HasForeignKey("RiffleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Coney.Shared.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Prize");
 
@@ -580,6 +572,11 @@ namespace Coney.Backend.Migrations
             modelBuilder.Entity("Coney.Shared.Entities.Country", b =>
                 {
                     b.Navigation("States");
+                });
+
+            modelBuilder.Entity("Coney.Shared.Entities.Riffle", b =>
+                {
+                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

@@ -25,9 +25,9 @@ namespace Coney.Shared.Entities
 
         public bool? IsEmailValidated { get; set; }
         public bool? IsUserAuthorized { get; set; }
-        public string? Role { get; set; } = "anonymous";
+        public string? Role { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
-    }
+}
 }

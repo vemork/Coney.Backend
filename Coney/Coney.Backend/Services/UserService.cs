@@ -58,7 +58,10 @@ public class UserService
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                CreatedAt = user.CreatedAt
+                CreatedAt = user.CreatedAt,
+                IsEmailValidated = user.IsEmailValidated,
+                IsUserAuthorized = user.IsUserAuthorized,
+                Role = user.Role
             }).ToList();
         }
         catch (Exception ex)
@@ -85,7 +88,10 @@ public class UserService
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                CreatedAt = user.CreatedAt
+                CreatedAt = user.CreatedAt,
+                IsEmailValidated = user.IsEmailValidated,
+                IsUserAuthorized = user.IsUserAuthorized,
+                Role = user.Role
             };
         }
         catch (Exception ex) when (!(ex is KeyNotFoundException))
@@ -137,7 +143,8 @@ public class UserService
                 Email = UserRegDto.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(UserRegDto.Password),
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+                Role = "user"
             };
 
             await _userRepository.AddAsync(user);
@@ -238,7 +245,7 @@ public class UserService
         }
     }
 
-    public async Task<User> UpdateUserAdminVerificationAsync(string email)
+    public async Task<UserRegistrationDto> UpdateUserAdminVerificationAsync(string email)
     {
         try
         {
@@ -253,7 +260,12 @@ public class UserService
                 existingUser.IsUserAuthorized = true;
                 existingUser.Role = "user";
                 await _userRepository.UpdateAsync(existingUser);
-                return existingUser;
+                return new UserRegistrationDto
+                {
+                    Email = existingUser.Email,
+                    FirstName = existingUser.FirstName,
+                    LastName = existingUser.LastName
+                };
             }
             else
             {

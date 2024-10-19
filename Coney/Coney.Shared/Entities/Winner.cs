@@ -14,16 +14,13 @@ public class Winner
 
     public Prize? Prize { get; set; }
 
-    [Required]
-    public int PrizeId { get; set; }
+    public int? PrizeId { get; set; }
 
     public User? User { get; set; }
 
-    [Required]
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     public Riffle? Riffle { get; set; }
 
-    [Required]
-    public int RiffleId { get; set; }
+    public int? RiffleId { get; set; }
 }

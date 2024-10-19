@@ -32,6 +32,12 @@ public class DataContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<Ticket>()
+         .HasOne(er => er.Riffle)
+         .WithMany(ep => ep.Tickets)
+         .HasForeignKey(er => er.RiffleId)
+         .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
         modelBuilder.Entity<Country>().HasIndex(x => x.Name).IsUnique();
         modelBuilder.Entity<State>().HasIndex(x => new { x.CountryId, x.Name }).IsUnique();
@@ -50,7 +56,7 @@ public class DataContext : DbContext
         var relationships = modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys());
         foreach (var relationship in relationships)
         {
-            relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            relationship.DeleteBehavior = DeleteBehavior.SetNull;
         }
     }
 }

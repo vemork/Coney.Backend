@@ -8,11 +8,9 @@ public class RiffleXRule
 
     public Riffle? Riffle { get; set; }
 
-    [Required]
-    public int RiffleId { get; set; }
+    public int? RiffleId { get; set; }
 
     public Rule? Rule { get; set; }
 
-    [Required]
-    public int RuleId { get; set; }
+    public int? RuleId { get; set; }
 }

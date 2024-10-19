@@ -8,13 +8,11 @@ public class UserXRiffle
 
     public Riffle? Riffle { get; set; }
 
-    [Required]
-    public int RiffleId { get; set; }
+    public int? RiffleId { get; set; }
 
     public User? User { get; set; }
 
-    [Required]
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

@@ -12,6 +12,5 @@ public class City
 
     public State? State { get; set; }
 
-    [Required]
-    public int StateId { get; set; }
+    public int? StateId { get; set; }
 }

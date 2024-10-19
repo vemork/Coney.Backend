@@ -12,6 +12,5 @@ public class State
 
     public Country? Country { get; set; }
 
-    [Required]
-    public int CountryId { get; set; }
+    public int? CountryId { get; set; }
 }

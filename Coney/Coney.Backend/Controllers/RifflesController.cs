@@ -34,7 +34,7 @@ public class RifflesController : ControllerBase
                 tickets.Add(new Ticket
                 {
                     TicketNumber = i.ToString(),
-                    RiffleId = riffle.Id, 
+                    RiffleId = riffle.Id,
                     UserId = null
                 });
             }
@@ -114,6 +114,10 @@ public class RifflesController : ControllerBase
             {
                 var NotFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "Riffle not found" });
                 return Ok(NotFoundResponse);
+            }
+            foreach (var ticket in riffle.Tickets.ToList())
+            {
+                ticket.RiffleId = null;
             }
             await _riffleRepository.DeleteAsync(riffle);
             var successResponse = new ApiResponse<List<Riffle>>(true, 200, []);

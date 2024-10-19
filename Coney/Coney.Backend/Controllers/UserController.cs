@@ -138,7 +138,7 @@ public class UsersController : ControllerBase
             return BadRequest(ex);
         }
     }
-
+    
     [HttpDelete("deleteUser/{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {

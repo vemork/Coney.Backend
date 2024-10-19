@@ -45,5 +45,39 @@ namespace Coney.Backend.Services
                 }
             }
         }
+
+        public async Task SendEmailAsync(string link, string toEmail)
+        {
+            
+            var emailMessage = new MimeMessage();
+
+            emailMessage.From.Add(new MailboxAddress("From Coney Recovery Support", _mailSettings.From));
+            emailMessage.To.Add(new MailboxAddress("", toEmail));
+            emailMessage.Subject = _mailSettings.SubjectRecoveryEs;
+
+            var bodyBuilder = new BodyBuilder
+            {
+                HtmlBody = string.Format(_mailSettings.BodyRecoveryEs, link)
+            };
+            emailMessage.Body = bodyBuilder.ToMessageBody();
+
+            using (var smtpClient = new MailKit.Net.Smtp.SmtpClient())
+            {
+                try
+                {
+                    await smtpClient.ConnectAsync(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                    await smtpClient.AuthenticateAsync(_mailSettings.From, _mailSettings.Password);
+                    await smtpClient.SendAsync(emailMessage);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al enviar el correo: {ex.Message}");
+                }
+                finally
+                {
+                    await smtpClient.DisconnectAsync(true);
+                }
+            }
+        }
     }
 }

@@ -161,12 +161,44 @@ public class UsersController : ControllerBase
         try
         {
             await _userService.changeUserPasswordService(changePasswordDto);
-            var successResponse = new ApiResponse<List<object>>(true, 201, new List<object> { "The password has been changed." });
+            var successResponse = new ApiResponse<List<object>>(true, 200, new List<object> { "The password has been changed." });
             return Ok(successResponse);
         }
         catch (Exception ex)
         {
             var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error processing user information ..." });
+            return Conflict(sqlException);
+        }
+    }
+
+    [HttpPost("recoveryUserPassword/{email}")]
+    public async Task<IActionResult> recoveryUserPasswordAsync(string email)
+    {
+        try
+        {
+            await _userService.recoveryUserPasswordService(email);
+            var successResponse = new ApiResponse<List<object>>(true, 200, new List<object> { "The password has been recovered." });
+            return Ok(successResponse);
+        }
+        catch (Exception ex)
+        {
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error processing user information ..." });
+            return Conflict(sqlException);
+        }
+    }
+    
+    [HttpGet("verifyUserRecoveryToken")]
+    public async Task<IActionResult> verifyUserRecoveryTokenAsync(string userEmail, string recoveryToken)
+    {
+        try
+        {
+            var verificationCode = await _userService.verifyUserRecoveryTokenService(userEmail, recoveryToken);
+            var successResponse = new ApiResponse<List<object>>(true, 200, new List<object> { verificationCode });
+            return Ok(successResponse);
+        }
+        catch (Exception ex)
+        {
+            var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error processing user information the token code could be expired..." });
             return Conflict(sqlException);
         }
     }

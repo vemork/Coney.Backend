@@ -318,4 +318,64 @@ public class UserService
             throw new ApplicationException($"An error occurred while updating the user password with EMAIL {changePasswordDto.Email}.");
         }
     }
+
+    public async Task recoveryUserPasswordService(string email)
+    {
+        try
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                throw new InvalidOperationException("The user has been not found.");
+            }
+            
+            var token = Guid.NewGuid().ToString();
+            user.Token = token;
+            user.TokenExp = DateTime.Now.AddMinutes(5);
+            await _userRepository.UpdateAsync(user);
+
+            _ = Task.Run(async () =>
+            {
+                var recoveryLink = $"https://localhost:7104/api/Users/verifyUserRecoveryToken?userEmail={Uri.EscapeDataString(email)}&recoveryToken={token}";
+                await _emailService.SendEmailAsync(recoveryLink, email);
+            });
+            return;
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error updating user password  with EMAIL {email}");
+            throw new ApplicationException($"An error occurred while updating the user password with EMAIL {email}.");
+        }
+    }
+
+        public async Task<string> verifyUserRecoveryTokenService(string email, string recoveryToken)
+    {
+        try
+        {
+           
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(recoveryToken))
+            {
+                throw new ApplicationException($"An error occurred while updating the user password with EMAIL {email}.");
+            }
+
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null || recoveryToken != user.Token || user.TokenExp < DateTime.Now)
+            {
+                throw new InvalidOperationException("Unexpected problem checking user recovery information.");
+            }
+            var randomPass = Guid.NewGuid().ToString();
+            user.Password = BCrypt.Net.BCrypt.HashPassword(randomPass);
+            user.Token = "";
+            user.TokenExp = null;
+            await _userRepository.UpdateAsync(user);
+            return randomPass;
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error updating user password  with EMAIL {email}");
+            throw new ApplicationException($"An error occurred while updating the user password with EMAIL {email}.");
+        }
+    }
 }

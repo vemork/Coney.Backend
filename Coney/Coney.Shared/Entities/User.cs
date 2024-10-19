@@ -29,5 +29,9 @@ namespace Coney.Shared.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
-}
+
+        [MaxLength(255)]
+        public string Token { get; set; }
+        public DateTime? TokenExp { get; set; }
+    }
 }

@@ -32,6 +32,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.Configure<UrlSettings>(builder.Configuration.GetSection("Urls"));
+
 
 var app = builder.Build();
 

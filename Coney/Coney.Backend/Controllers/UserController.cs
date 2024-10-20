@@ -2,6 +2,8 @@
 using Coney.Backend.Services;
 using Coney.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+
 
 namespace Coney.Backend.Controllers;
 
@@ -10,10 +12,15 @@ namespace Coney.Backend.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly UserService _userService;
+    private readonly UrlSettings _urlSettings;
 
-    public UsersController(UserService userService)
+    public UsersController(
+        UserService userService,
+        IOptions<UrlSettings> urlSettings
+    )
     {
         _userService = userService;
+        _urlSettings = urlSettings.Value;
     }
 
     [HttpPost("createUser")]
@@ -53,10 +60,9 @@ public class UsersController : ControllerBase
                 var notFoundResponse = new ApiResponse<List<object>>(false, 404, new List<object> { "User not found" });
                 return NotFound(notFoundResponse);
             }
-            var verificationOk = new ApiResponse<List<object>>(true, 200, new List<object> { " Email verification was successful..." });
-            return Ok(verificationOk);
+            return Redirect(_urlSettings.ThankYouPage);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             var internalException = new ApiResponse<List<object>>(false, 503, new List<object> { "Unexpected error verifying user email..." });
             return Conflict(internalException);
@@ -193,10 +199,9 @@ public class UsersController : ControllerBase
         try
         {
             var verificationCode = await _userService.verifyUserRecoveryTokenService(userEmail, recoveryToken);
-            var successResponse = new ApiResponse<List<object>>(true, 200, new List<object> { verificationCode });
-            return Ok(successResponse);
+            return Redirect(_urlSettings.PasswordChangePage);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error processing user information the token code could be expired..." });
             return Conflict(sqlException);

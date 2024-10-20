@@ -199,10 +199,9 @@ public class UsersController : ControllerBase
         try
         {
             var verificationCode = await _userService.verifyUserRecoveryTokenService(userEmail, recoveryToken);
-            var successResponse = new ApiResponse<List<object>>(true, 200, new List<object> { verificationCode });
-            return Ok(successResponse);
+            return Redirect(_urlSettings.PasswordChangePage);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             var sqlException = new ApiResponse<List<object>>(false, 404, new List<object> { "Unexpected error processing user information the token code could be expired..." });
             return Conflict(sqlException);

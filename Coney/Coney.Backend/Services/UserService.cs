@@ -302,7 +302,7 @@ public class UserService
         try
         {
             var user = await _userRepository.GetByEmailAsync(changePasswordDto.Email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(changePasswordDto.CurrentPassword, user.Password))
+            if (user == null)
             {
                 throw new InvalidOperationException("The user has been rejected.");
             }

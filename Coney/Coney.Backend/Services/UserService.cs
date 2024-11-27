@@ -336,7 +336,7 @@ public class UserService
 
             _ = Task.Run(async () =>
             {
-                var recoveryLink = $"https://localhost:7104/api/Users/verifyUserRecoveryToken?userEmail={Uri.EscapeDataString(email)}&recoveryToken={token}";
+                var recoveryLink = $"https://coneybackend.azurewebsites.net/api/Users/verifyUserRecoveryToken?userEmail={Uri.EscapeDataString(email)}&recoveryToken={token}";
                 await _emailService.SendEmailAsync(recoveryLink, email);
             });
             return;

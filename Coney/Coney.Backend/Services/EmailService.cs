@@ -14,7 +14,7 @@ namespace Coney.Backend.Services
 
         public async Task SendEmailAsync(string toEmail)
         {
-            var verificationLink = $"https://localhost:7104/api/Users/verifyUser?userEmail={toEmail}";
+            var verificationLink = $"https://coneybackend.azurewebsites.net/api/Users/verifyUser?userEmail={toEmail}";
             var emailMessage = new MimeMessage();
 
             emailMessage.From.Add(new MailboxAddress("From Coney Support", _mailSettings.From));
